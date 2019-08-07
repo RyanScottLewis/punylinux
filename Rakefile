@@ -23,19 +23,16 @@ path :sources,  paths.var.join('sources')
 
 path :linux_config_source, paths.src.join('linux', 'config')
 
+# Defined lazily with a block since they depend on specific packages
+path(:linux_config)   { packages.linux.build_path.join('.config') }
+path(:busybox_config) { packages.busybox.build_path.join('.config') }
+
 # == Packages ======================================================================================
 # Load all packages files and use each individual file contents to define a package
 
 paths.packages.join('*.rb').glob.each do |path|
   package { instance_eval(path.read, path.to_s) }
 end
-
-# == Paths =========================================================================================
-# Dependent on packages, so defined after them
-
-# TODO: Define with a block to set path lazily
-path :linux_config,   packages.linux.build_path.join('.config')
-path :busybox_config, packages.busybox.build_path.join('.config')
 
 # == Clean =========================================================================================
 
@@ -187,20 +184,6 @@ packages.each do |package|
     instance_exec(package, &package.on_build) if package.on_build?
     sh "touch '#{package.build_lock_path}'"
   end
-
-  #file package.package_lock_path => [package.build_lock_path, paths.build.to_dir] do
-    #instance_exec(package, &package.on_package) if package.on_package?
-    #sh "touch '#{package.package_lock_path}'"
-  #end
-
-  #pp package.build_files
-
-  #package.build_files.each do |path|
-    ##p path
-    ##file paths.build.join(path) => paths.build.to_dir do
-      ##instance_exec(package, &package.on_package) if package.on_package?
-    ##end
-  #end if package.files?
 end
 
 packages.with_files.each do |package|

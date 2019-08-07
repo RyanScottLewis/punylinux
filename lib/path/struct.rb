@@ -19,10 +19,18 @@ module Path
     attr_reader :name
 
     def name=(value)
+      @name = @name.call if @name.is_a?(Proc)
+
       @name = value.to_s.to_sym
     end
 
-    attr_reader :path
+    #attr_reader :path
+
+    def path
+      @path = @path.call if @path.is_a?(Proc)
+
+      @path
+    end
     alias_method :value, :path
 
     def path=(path)

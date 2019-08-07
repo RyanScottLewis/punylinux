@@ -45,7 +45,6 @@ module Package
     attr_accessor :signature_lock_path
     attr_accessor :build_path
     attr_accessor :build_lock_path
-    attr_accessor :package_lock_path
 
     def sources
       sources = []
