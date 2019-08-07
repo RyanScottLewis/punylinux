@@ -37,7 +37,7 @@ module Path
       @path = Pathname(path.to_s)
     end
 
-    def_delegators :@path, :read, :exist?, :glob, :to_s
+    def_delegators :@path, :read, :exist?, :glob, :extname, :to_s
 
     # TODO: Class method for these
 
@@ -53,12 +53,16 @@ module Path
       self.class.new @path.dirname(*arguments)
     end
 
-    def extname(*arguments)
-      self.class.new @path.extname(*arguments)
-    end
+    #def extname(*arguments)
+      #self.class.new @path.extname(*arguments)
+    #end
 
     def sub_ext(*arguments)
       self.class.new @path.sub_ext(*arguments)
+    end
+
+    def append_ext(ext)
+      sub_ext("#{extname}#{ext}")
     end
 
     def expand_path(*arguments)

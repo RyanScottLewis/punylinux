@@ -15,7 +15,7 @@ module Package
     attr_accessor :signature
     attr_accessor :files
 
-    def files?
+    def files? # TODO: has_files?
       !!@files
     end
 
@@ -23,18 +23,24 @@ module Package
       @files.map { |path| paths.build.path.join(path.to_s.gsub(/^\//, '')) }
     end
 
-    def checksum?
+    def checksum? # TODO: has_checksum?
       !!@checksum
     end
 
-    def external_checksum?
-      !checksum_url.nil?
+    def external_checksum? # TODO: has_external_checksum?
+      checksum? && @checksum.start_with?('http')
     end
 
-    def signature?
+    def signature? # TODO: has_signature?
       !!@signature
     end
 
+    # TODO:
+    #def external_signature? # TODO: has_external_signature?
+      #signature? && @signature.start_with?('http')
+    #end
+
+    attr_accessor :identifier
     attr_accessor :archive_url
     attr_accessor :archive_path
     attr_accessor :checksum_url

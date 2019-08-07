@@ -14,24 +14,45 @@ path :src
 path :tmp
 path :var
 
-path :boot,     paths.build.join('boot')
+path :fs,                  paths.src.join('fs')
+path :packages,            paths.src.join('pkg')
+path :linux_config_source, paths.src.join('linux', 'config')
+path(:linux_config)        { packages.linux.build_path.join('.config') }
+path(:busybox_config)      { packages.busybox.build_path.join('.config') }
+
 path :builds,   paths.var.join('builds')
-path :fs,       paths.src.join('fs')
-path :initrd,   paths.boot.join('initrd.img')
-path :packages, paths.src.join('pkg')
 path :sources,  paths.var.join('sources')
 
-path :linux_config_source, paths.src.join('linux', 'config')
-
-# Defined lazily with a block since they depend on specific packages
-path(:linux_config)   { packages.linux.build_path.join('.config') }
-path(:busybox_config) { packages.busybox.build_path.join('.config') }
+path :boot,   paths.build.join('boot')
+path :initrd, paths.boot.join('initrd.img')
 
 # == Packages ======================================================================================
-# Load all packages files and use each individual file contents to define a package
 
+# Load all packages files and use each individual file contents to define a package
 paths.packages.join('*.rb').glob.each do |path|
   package { instance_eval(path.read, path.to_s) }
+end
+
+# Set up all automatic package attributes # TODO: This could prolly be a wrapper for Package::Struct that accepts a Package::Struct and Path::List on init
+packages.each do |package|
+  package.identifier = [package.name, package.version].join(?-)
+
+  package.archive_url  = package.url
+  package.archive_path = paths.sources.join(File.basename(package.url))
+
+  if package.checksum?
+    package.checksum_url  = package.checksum if package.external_checksum?
+    package.checksum_path = package.archive_path.append_ext('.sha256')
+  end
+
+  package.signature_url = package.signature if package.signature?
+
+  package.build_path = paths.builds.join(package.identifier)
+
+  lock_path                   = paths.tmp.join(package.identifier)
+  package.checksum_lock_path  = lock_path.join('.checksum.lock')  if package.checksum?
+  package.signature_lock_path = lock_path.join('.signature.lock') if package.signature?
+  package.build_lock_path     = lock_path.join('.build.lock')
 end
 
 # == Clean =========================================================================================
