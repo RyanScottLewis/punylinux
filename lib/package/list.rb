@@ -35,8 +35,8 @@ module Package
       with_checksums.select(&:external_checksum?)
     end
 
-    def without_external_checksums
-      with_checksums.reject(&:external_checksum?)
+    def with_internal_checksums
+      with_checksums.select(&:internal_checksum?)
     end
 
     def checksum_paths

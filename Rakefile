@@ -38,21 +38,24 @@ packages.each do |package|
   package.identifier = [package.name, package.version].join(?-)
 
   package.archive_url  = package.url
-  package.archive_path = paths.sources.join(File.basename(package.url))
+  package.archive_path = Path(paths.sources.join(package.archive_basename))
 
   if package.checksum?
     package.checksum_url  = package.checksum if package.external_checksum?
-    package.checksum_path = package.archive_path.append_ext('.sha256')
+    package.checksum_path = path.sources.join(package.identifier).append_ext('.checksum')
   end
 
-  package.signature_url = package.signature if package.signature?
+  if package.signature?
+    package.signature_url  = package.signature
+    package.signature_path = path.sources.join(package.identifier).append_ext('.signature')
+  end
 
   package.build_path = paths.builds.join(package.identifier)
 
-  lock_path                   = paths.tmp.join(package.identifier)
-  package.checksum_lock_path  = lock_path.join('.checksum.lock')  if package.checksum?
-  package.signature_lock_path = lock_path.join('.signature.lock') if package.signature?
-  package.build_lock_path     = lock_path.join('.build.lock')
+  package.lock_path           = paths.tmp.join(package.identifier)
+  package.checksum_lock_path  = package.lock_path.join('checksum.lock')  if package.checksum?
+  package.signature_lock_path = package.lock_path.join('signature.lock') if package.signature?
+  package.build_lock_path     = package.lock_path.join('build.lock')
 end
 
 # == Clean =========================================================================================
@@ -128,26 +131,35 @@ directory paths.linux_config_source.dirname.to_dir
 
 # -- Sources ---------------------------------------------------------------------------------------
 
+# Download all sources for all packages
 packages.sources.each do |source|
   file source.path => paths.sources.to_dir do
-    sh "cd '#{paths.sources}' && wget -q '#{source.url}'"
+    sh "curl -L '#{source.url}' --output '#{source.path}'"
   end
 end
 
-packages.without_external_checksums.each do |package|
-  file package.checksum_path => [package.archive_path, paths.sources.to_dir] do
-    sh "cd '#{paths.sources}' && sha256sum '#{package.archive_path.basename}' > '#{package.checksum_path.basename}'"
+# Generate checksum file from checksum provided within package specification
+packages.with_internal_checksums.each do |package|
+  file package.checksum_path => paths.sources.to_dir do
+    package.checksum_path.open('w+') do |file|
+      contents = "%s %s" % [package.checksum, package.archive_basename]
+
+      file.write(contents)
+    end
   end
 end
 
+# Download checksum
 packages.with_external_checksums.each do |package|
   file package.checksum_path => [package.archive_path, paths.sources.to_dir]
 end
 
+# Download package signature
 packages.with_signatures.each do |package|
   file package.signature_path => [package.archive_path, paths.sources.to_dir]
 end
 
+# Decompress source archive
 packages.each do |package|
   directory package.build_path => [package.archive_path, package.checksum_lock_path, package.signature_lock_path, paths.builds.to_dir] do
     sh "tar -xf '#{package.archive_path}' -C '#{paths.builds}'"
@@ -173,7 +185,7 @@ file paths.busybox_config => [packages.busybox.build_path, paths.linux_config_so
   cp paths.linux_config_source, task.name
 end
 
-# -- Locks -----------------------------------------------------------------------------------------
+# -- Checksums -------------------------------------------------------------------------------------
 
 packages.with_checksums.each do |package|
   file package.checksum_lock_path => [package.archive_path, package.checksum_path] do |task|
@@ -184,7 +196,7 @@ end
 
 packages.with_signatures.each do |package|
   file package.signature_lock_path => [package.archive_path, package.signature_path] do |task|
-    if package.verify?
+    if package.on_verify?
       instance_exec(package, &package.on_verify)
     else
       sh "gpg --verify '#{package.signature_path}' '#{package.archive_path}'"

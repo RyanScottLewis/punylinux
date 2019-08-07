@@ -37,7 +37,7 @@ module Path
       @path = Pathname(path.to_s)
     end
 
-    def_delegators :@path, :read, :exist?, :glob, :extname, :to_s
+    def_delegators :@path, :open, :read, :exist?, :glob, :extname, :to_s
 
     # TODO: Class method for these
 

@@ -1,5 +1,5 @@
 name      :busybox
-version   "1.31.0"
+version   '1.31.0'
 url       "https://busybox.net/downloads/busybox-#{version}.tar.bz2"
 signature "#{url}.sig"
 checksum  "#{url}.sha256"

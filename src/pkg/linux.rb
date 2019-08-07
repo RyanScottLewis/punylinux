@@ -1,7 +1,7 @@
 name      :linux
-version   "5.2.5"
+version   '5.2.5'
 url       "https://kernel.org/pub/linux/kernel/v#{version.split(?.).first}.x/linux-#{version}.tar.xz"
-checksum  "c645402843f90a69426975f8923923dfc6edebb5d1bc0092560ffb7135d3cd96"
+checksum  'c645402843f90a69426975f8923923dfc6edebb5d1bc0092560ffb7135d3cd96'
 signature url.gsub(/xz$/, 'sign')
 files     %W(
   /bin
