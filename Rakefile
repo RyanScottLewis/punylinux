@@ -4,9 +4,6 @@ require "coreext/pathname"
 require "package/import"
 require "path/import"
 
-# TODO:
-# * rsync -a src/fs/ build/ # With ending slashes to merge into directory
-
 # == Paths =========================================================================================
 
 path :build
@@ -33,7 +30,7 @@ paths.packages.join('*.rb').glob.each do |path|
   package { instance_eval(path.read, path.to_s) }
 end
 
-# Set up all automatic package attributes # TODO: This could prolly be a wrapper for Package::Struct that accepts a Package::Struct and Path::List on init
+# Set up all automatic package attributes
 packages.each do |package|
   package.identifier = [package.name, package.version].join(?-)
 

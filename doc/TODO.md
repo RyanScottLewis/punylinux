@@ -25,9 +25,15 @@
   * The `so-and-so/import` files feel gross
 * Class method for defining `Pathname` delegates on `Path::Struct`
 * Split tasks into files within `lib/tasks`
+* Smarter way of setting "hidden" attributes on `Package::Struct` rather than baked into `Rakefile`
+* Make it so the `linux` package is the only one required, I dont think busybox references within
+  the tasks matter since I dont think we need to use Linux's `.config` file for `busybox` and just
+  let it define it with `make defconfig`
+* Move creation of Linux FHS directories and inital ramdisk out of the `linux` package
 
 ## Documentation
 
 * YARDoc everywhere
 * README > Usage > Package Specification - Define package DSL
+* Document that a package named `linux` must be defined
 
