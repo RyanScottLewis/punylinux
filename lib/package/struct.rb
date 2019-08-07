@@ -19,7 +19,7 @@ module Package
       File.basename(@archive_url)
     end
 
-    def files? # TODO: has_files?
+    def files?
       !!@files
     end
 
@@ -27,11 +27,11 @@ module Package
       @files.map { |path| paths.build.path.join(path.to_s.gsub(/^\//, '')) }
     end
 
-    def checksum? # TODO: has_checksum?
+    def checksum?
       !!@checksum
     end
 
-    def external_checksum? # TODO: has_external_checksum?
+    def external_checksum?
       checksum? && @checksum.start_with?('http')
     end
 
@@ -39,14 +39,9 @@ module Package
       !external_checksum?
     end
 
-    def signature? # TODO: has_signature?
+    def signature?
       !!@signature
     end
-
-    # TODO:
-    #def external_signature? # TODO: has_external_signature?
-      #signature? && @signature.start_with?('http')
-    #end
 
     attr_accessor :identifier
 

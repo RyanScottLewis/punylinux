@@ -12,7 +12,7 @@ def paths
   Path.all
 end
 
-def read(path) # TODO: REMOVE
+def read(path)
   Path(path).read
 end
 

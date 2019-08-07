@@ -39,8 +39,6 @@ module Path
 
     def_delegators :@path, :open, :read, :exist?, :glob, :extname, :to_s
 
-    # TODO: Class method for these
-
     def join(*arguments)
       self.class.new @path.join(*arguments)
     end
@@ -52,10 +50,6 @@ module Path
     def dirname(*arguments)
       self.class.new @path.dirname(*arguments)
     end
-
-    #def extname(*arguments)
-      #self.class.new @path.extname(*arguments)
-    #end
 
     def sub_ext(*arguments)
       self.class.new @path.sub_ext(*arguments)
