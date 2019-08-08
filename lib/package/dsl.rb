@@ -1,40 +1,9 @@
-require 'pathname'
-require 'package/struct'
+require 'package/concerns/dsl_helpers'
 
 module Package
   class DSL
 
-    def self.dsl_property(name)
-      define_method(name) do |*arguments|
-        raise ArgumentError, "argument length must be 0..1 (got #{arguments.length})" unless arguments.length <= 1
-
-        arguments.length == 1 ? @package.send("#{name}=", arguments.first) : @package.send(name)
-      end
-    end
-
-    def self.dsl_callback(name)
-      define_method(name) do |&block|
-        if block.nil?
-          @package.send(name)
-        else
-          @package.send("#{name}=", block)
-        end
-      end
-    end
-
-    def self.call(package=Struct.new, &block)
-      new(package).call(&block)
-    end
-
-    def initialize(package)
-      @package = package
-    end
-
-    def call(&block)
-      instance_eval(&block)
-
-      @package
-    end
+    include DSLHelpers
 
     dsl_property :name
     dsl_property :version
