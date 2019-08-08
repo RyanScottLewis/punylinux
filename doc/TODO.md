@@ -31,6 +31,8 @@
   the tasks matter since I dont think we need to use Linux's `.config` file for `busybox` and just
   let it define it with `make defconfig`
 * Move creation of Linux FHS directories and inital ramdisk out of the `linux` package
+* Use system-installed syslinux instead of requiring that it be defined as a package?
+  * a(ny) kernel should be the ONLY required package
 
 ## Documentation
 
