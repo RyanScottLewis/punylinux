@@ -12,6 +12,7 @@
   * If path is relative like one of the following, it is relative to the package's path (`package.path` or `package.specification_path`)
     * `file://foobar.tar`
     * `file://./foobar.tar`
+* Files can accept either an array of strings or an file/URL
 * Load tasks from files within `src/tasks`
 * Use fakeroot?
 
