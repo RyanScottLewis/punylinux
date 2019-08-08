@@ -49,6 +49,11 @@ like to support:
 * xz
 * etc.
 
+#### Image Generation
+
+* syslinux
+* cdrkit
+
 ## Usage
 
 Define any packages you would like to include within `src/pkg/` and run `rake`.  
