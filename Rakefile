@@ -53,8 +53,9 @@ end
 
 CLEAN.include paths.linux_config_source
 CLEAN.include paths.var
+CLEAN.include paths.tmp
 
-CLOBBER.include paths.build_root
+CLOBBER.include paths.build
 
 # == Tasks =========================================================================================
 
