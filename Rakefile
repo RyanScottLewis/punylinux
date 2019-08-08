@@ -16,9 +16,9 @@ path :lib
 path :src
 path :tmp
 path :var
+path :pkg
 
 path :fs,                  paths.src.join('fs')
-path :packages,            paths.src.join('pkg')
 path :linux_config_source, paths.src.join('linux', 'config')
 path(:linux_config)        { packages.linux.build_path.join('.config') }
 
@@ -32,7 +32,7 @@ path :initrd,     paths.boot.join('initrd.img')
 # == Packages ======================================================================================
 
 # Load all packages files and use each individual file contents to define a package
-paths.packages.join('*.rb').glob.each do |path|
+paths.pkg.join('*.rb').glob.each do |path|
   package { instance_eval(path.read, path.to_s) }
 end
 

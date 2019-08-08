@@ -3,7 +3,7 @@
 Build automation (powered by Ruby & Rake) for a very minimal Linux system.
 
 * Package Management
-  * Aquire package sources (packages defined with DSL in files within `src/pkg`)
+  * Aquire package sources (packages defined with DSL in files within `pkg/`)
     * Optionally verify package checksum
       * Download/Write the checksum to file
       * Verify with `sha256sum`
@@ -56,7 +56,7 @@ like to support:
 
 ## Usage
 
-Define any packages you would like to include within `src/pkg/` and run `rake`.  
+Define any packages you would like to include within `pkg/` and run `rake`.  
 All package sources will be aquired, optionally checksummed and verified by signature.  
 Each package will then be built and installed into the `build/` directory.
 
