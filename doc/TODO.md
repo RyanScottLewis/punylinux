@@ -33,6 +33,9 @@
 * Move creation of Linux FHS directories and inital ramdisk out of the `linux` package
 * Use system-installed syslinux instead of requiring that it be defined as a package?
   * a(ny) kernel should be the ONLY required package
+* Are build lock files even uses? Should they be? Just use the package build folder (`var/builds/PACKAGE/`)
+* Rename `Package::Struct#build_path` to `decompress_path` or `wokring_path` or something
+* Rename `Package::Struct#url` to `archive` or `source`
 
 ## Documentation
 
