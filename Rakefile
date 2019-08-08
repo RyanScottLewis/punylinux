@@ -36,7 +36,7 @@ path :initrd,     paths.boot.join('initrd.img') # Linux root path - boot/initrd.
 # == Packages ======================================================================================
 
 # Load all packages files and use each individual file contents to define a package
-paths.pkg.join('*.rb').glob.each do |path|
+paths.pkg.glob('*.rb').each do |path|
   package { instance_eval(path.read, path.to_s) }
 end
 
