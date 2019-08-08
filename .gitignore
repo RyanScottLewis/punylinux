@@ -2,3 +2,5 @@ build/
 var/
 tmp/
 
+src/linux/config
+
