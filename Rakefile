@@ -1,6 +1,5 @@
 $LOAD_PATH.unshift(File.expand_path(File.join("..", "lib"), __FILE__))
 require "rake/clean"
-require "coreext/pathname"
 require "package/import"
 require "path/import"
 
@@ -15,23 +14,23 @@ end
 #   path :bar, 'foo/bar'                            # paths.bar => 'foo/bar'
 #   path(:baz) { some_global_not_yet_defined.path } # paths.baz => 'value_of_global' # Lazily-defined
 
-path :build # Linux root, ISO image root, etc.
-path :lib   # Library sources (Ruby code for this Rakefile)
-path :src   # Project sources
-path :tmp   # Temporary file storage
-path :var   # Variable file storage
-path :pkg   # Package definitions
+path :build                                                            # Linux root, ISO image root, etc.
+path :lib                                                              # Library sources (Ruby code for this Rakefile)
+path :src                                                              # Project sources
+path :tmp                                                              # Temporary file storage
+path :var                                                              # Variable file storage
+path :pkg                                                              # Package definitions
 
 path :fs,                  paths.src.join('fs')                        # Files to import into the Linux root path
 path :linux_config_source, paths.src.join('linux', 'config')           # Linux build configuration source
 path(:linux_config)      { packages.linux.build_path.join('.config') } # Linux build configuration target
 
-path :builds,   paths.var.join('builds')  # Package builds
-path :sources,  paths.var.join('sources') # Package sources
+path :builds,              paths.var.join('builds')                    # Package builds
+path :sources,             paths.var.join('sources')                   # Package sources
 
-path :build_root, paths.build.join('root')      # Linux root path - /
-path :boot,       paths.build_root.join('boot') # Linux root path - boot/
-path :initrd,     paths.boot.join('initrd.img') # Linux root path - boot/initrd.img # TODO: Use initrd.gz
+path :build_root, paths.build.join('root')                             # Linux root path - /
+path :boot,       paths.build_root.join('boot')                        # Linux root path - boot/
+path :initrd,     paths.boot.join('initrd.img')                        # Linux root path - boot/initrd.img # TODO: Use initrd.gz
 
 # == Packages ======================================================================================
 
