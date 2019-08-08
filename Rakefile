@@ -1,6 +1,5 @@
 $LOAD_PATH.unshift(File.expand_path(File.join("..", "lib"), __FILE__))
 require "rake/clean"
-require "coreext/pathname"
 require "package/import"
 require "path/import"
 

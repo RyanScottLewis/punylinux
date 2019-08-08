@@ -9,7 +9,7 @@ module Path
     end
 
     def define(*arguments, &block)
-      all << Path::Struct.new(block.nil? ? arguments : block)
+      all << Path::Struct.new(*arguments, &block)
     end
 
   end

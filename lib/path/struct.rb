@@ -1,68 +1,84 @@
-require 'forwardable'
-require 'pathname'
-
 module Path
+  # Wrapper for paths, very similar to Pathname only can have an optional name and lazily-defined
+  # path values.
+  # If the `path` is set to a Proc or a block is given in the `#initialize` method, then it will
+  # set the `path` property to the value returned by calling the block on first `#path` invocation.
   class Struct
 
-    extend Forwardable
+    def initialize(name: nil, path: nil, &block)
+      raise ArgumentError, "Cannot pass both a path and a block" if block_given? && !path.nil?
 
-    def initialize(*arguments)
-      arguments = arguments.flatten
-      return if arguments.empty?
-      raise ArgumentError, "expected 0..2 arguments" if arguments.length > 2
-
-      case arguments.length
-      when 1 then self.name            = arguments.first
-      when 2 then self.name, self.path = arguments
-      end
+      self.name = name                        unless name.nil?
+      self.path = block_given? ? block : path unless !block_given? && path.nil?
     end
 
-    attr_accessor :name
+    attr_reader :name
+
+    def name=(value)
+      @name = value.to_sym
+    end
 
     def path
-      return Pathname(@name.to_s) if @path.nil?
+      return nil        if @name.nil? && @path.nil?
+      return @name.to_s if @path.nil?
+
       @path = @path.call if @path.is_a?(Proc)
 
       @path
     end
-    alias_method :value, :path
+    alias_method :to_s,   :path
+    alias_method :to_str, :to_s
 
-    def path=(path)
-      @path = Pathname(path.to_s)
+    def path=(value)
+      @path = value.to_s unless value.is_a?(Proc)
+
+      @path
     end
 
-    def_delegators :path, :open, :read, :exist?, :glob, :extname, :to_s
+    def open(mode=?r)
+      File.open(path, mode) { |file| yield(file) }
+    end
+
+    def read
+      open { |file| file.read }
+    end
+
+    def exist?
+      File.exist?(path)
+    end
+
+    def extname
+      File.extname(path)
+    end
+
+    def glob(pattern=nil)
+      pattern = pattern.nil? ? path : join(pattern)
+
+      Dir[pattern].map { |path| self.class.new(path: path) }
+    end
 
     def join(*arguments)
-      self.class.new path.join(*arguments)
-    end
-
-    def basename(*arguments)
-      self.class.new path.basename(*arguments)
-    end
-
-    def dirname(*arguments)
-      self.class.new path.dirname(*arguments)
-    end
-
-    def sub_ext(*arguments)
-      self.class.new path.sub_ext(*arguments)
-    end
-
-    def append_ext(ext)
-      sub_ext("#{extname}#{ext}")
+      self.class.new(path: File.join(path, *arguments))
     end
 
     def expand_path(*arguments)
-      self.class.new path.expand_path(*arguments)
+      self.class.new(path: File.expand_path(path, *arguments))
     end
 
-    def to_str
-      to_s
+    def basename
+      self.class.new(path: File.basename(path))
+    end
+
+    def dirname
+      self.class.new(path: File.dirname(path))
+    end
+
+    def append_ext(ext)
+      self.class.new(path: "#{path}#{ext}")
     end
 
     def to_dir
-      "#{path}/"
+      self.class.new(path: "#{path}/")
     end
 
   end

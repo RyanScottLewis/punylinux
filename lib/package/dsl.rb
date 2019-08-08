@@ -1,4 +1,3 @@
-require 'pathname'
 require 'package/struct'
 
 module Package
