@@ -20,8 +20,9 @@ path(:busybox_config)      { packages.busybox.build_path.join('.config') }
 path :builds,   paths.var.join('builds')
 path :sources,  paths.var.join('sources')
 
-path :boot,   paths.build.join('boot')
-path :initrd, paths.boot.join('initrd.img')
+path :build_root, paths.build.join('root')
+path :boot,       paths.build_root.join('boot')
+path :initrd,     paths.boot.join('initrd.img')
 
 # == Packages ======================================================================================
 
@@ -60,7 +61,7 @@ end
 CLEAN.include paths.linux_config_source
 CLEAN.include paths.var
 
-CLOBBER.include paths.build
+CLOBBER.include paths.build_root
 
 # == Tasks =========================================================================================
 
@@ -120,7 +121,7 @@ task package: packages.build_files
 
 directory paths.sources.to_dir
 directory paths.builds.to_dir
-directory paths.build.to_dir
+directory paths.build_root.to_dir
 directory paths.boot.to_dir
 directory paths.linux_config_source.dirname.to_dir
 
@@ -218,7 +219,7 @@ end
 
 packages.with_files.each do |package|
   package.build_files.each do |path|
-    file path => paths.build.to_dir do
+    file path => paths.build_root.to_dir do
       instance_exec(package, &package.on_package) if package.on_package?
     end
   end

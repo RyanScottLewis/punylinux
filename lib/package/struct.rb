@@ -24,7 +24,7 @@ module Package
     end
 
     def build_files
-      @files.map { |path| paths.build.path.join(path.to_s.gsub(/^\//, '')) }
+      @files.map { |path| paths.build_root.path.join(path.to_s.gsub(/^\//, '')) }
     end
 
     def checksum?
