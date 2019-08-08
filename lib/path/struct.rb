@@ -1,4 +1,5 @@
 require 'forwardable'
+require 'pathname'
 
 module Path
   class Struct
@@ -11,22 +12,15 @@ module Path
       raise ArgumentError, "expected 0..2 arguments" if arguments.length > 2
 
       case arguments.length
-      when 1 then self.name = self.path = arguments.first
+      when 1 then self.name            = arguments.first
       when 2 then self.name, self.path = arguments
       end
     end
 
-    attr_reader :name
-
-    def name=(value)
-      @name = @name.call if @name.is_a?(Proc)
-
-      @name = value.to_s.to_sym
-    end
-
-    #attr_reader :path
+    attr_accessor :name
 
     def path
+      return Pathname(@name.to_s) if @path.nil?
       @path = @path.call if @path.is_a?(Proc)
 
       @path
@@ -37,22 +31,22 @@ module Path
       @path = Pathname(path.to_s)
     end
 
-    def_delegators :@path, :open, :read, :exist?, :glob, :extname, :to_s
+    def_delegators :path, :open, :read, :exist?, :glob, :extname, :to_s
 
     def join(*arguments)
-      self.class.new @path.join(*arguments)
+      self.class.new path.join(*arguments)
     end
 
     def basename(*arguments)
-      self.class.new @path.basename(*arguments)
+      self.class.new path.basename(*arguments)
     end
 
     def dirname(*arguments)
-      self.class.new @path.dirname(*arguments)
+      self.class.new path.dirname(*arguments)
     end
 
     def sub_ext(*arguments)
-      self.class.new @path.sub_ext(*arguments)
+      self.class.new path.sub_ext(*arguments)
     end
 
     def append_ext(ext)
@@ -60,15 +54,15 @@ module Path
     end
 
     def expand_path(*arguments)
-      self.class.new @path.expand_path(*arguments)
+      self.class.new path.expand_path(*arguments)
     end
 
     def to_str
-      @path.to_s
+      to_s
     end
 
     def to_dir
-      "#{@path}/"
+      "#{path}/"
     end
 
   end
