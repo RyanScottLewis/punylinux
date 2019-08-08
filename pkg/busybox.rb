@@ -3,7 +3,7 @@ version   '1.31.0'
 url       "https://busybox.net/downloads/busybox-#{version}.tar.bz2"
 signature "#{url}.sig"
 checksum  "#{url}.sha256"
-files     paths.packages.join('busybox', 'files').read.lines.map(&:strip)
+files     paths.pkg.join('busybox', 'files').read.lines.map(&:strip)
 
 on_build do |package|
   sh <<~EOS
