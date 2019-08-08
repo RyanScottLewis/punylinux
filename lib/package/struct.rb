@@ -10,7 +10,7 @@ module Package
     end
 
     attr_accessor :version
-    attr_accessor :url
+    attr_accessor :archive
     attr_accessor :checksum
     attr_accessor :signature
     attr_accessor :files

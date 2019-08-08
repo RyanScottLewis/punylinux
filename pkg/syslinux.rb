@@ -4,9 +4,9 @@
 
 name      :syslinux
 version   '6.03'
-url       "https://kernel.org/pub/linux/utils/boot/syslinux/syslinux-#{version}.tar.xz"
+archive   "https://kernel.org/pub/linux/utils/boot/syslinux/syslinux-#{version}.tar.xz"
 checksum  '26d3986d2bea109d5dc0e4f8c4822a459276cf021125e8c9f23c3cca5d8c850e'
-signature url.gsub(/xz$/, 'sign')
+signature archive.gsub(/xz$/, 'sign')
 
 on_verify do |package|
   decompressed_path = package.archive_path.sub_ext('')

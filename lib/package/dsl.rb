@@ -38,7 +38,7 @@ module Package
 
     dsl_property :name
     dsl_property :version
-    dsl_property :url
+    dsl_property :archive
     dsl_property :signature
     dsl_property :checksum
     dsl_property :files

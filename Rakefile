@@ -42,7 +42,6 @@ end
 
 # Set up all automatic package attributes
 packages.each do |package|
-  package.identifier          = [package.name, package.version].join(?-)
   package.archive_path        = paths.sources.join(package.archive_basename)
   package.checksum_path       = paths.sources.join(package.identifier).append_ext('.checksum')  if package.checksum?
   package.signature_path      = paths.sources.join(package.identifier).append_ext('.signature') if package.signature?
@@ -85,7 +84,7 @@ task :list do
     puts "  %s %s = %s" % [
       package.name.to_s.ljust(longest_package_name),
       package.version.ljust(longest_package_version),
-      package.url
+      package.archive
     ]
   end
 end

@@ -2,7 +2,7 @@ packages.each do |package|
 
   # Download source archive
   file package.archive_path => paths.sources.to_dir do
-    download package.url, archive_path
+    download package.archive, archive_path
   end
 
   # Decompress source archives
