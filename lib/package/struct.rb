@@ -1,5 +1,6 @@
-require 'package/types'
 require 'dry/struct'
+require 'package/types'
+require 'package/path_resolver'
 
 module Package
   class Struct < Dry::Struct
@@ -12,10 +13,18 @@ module Package
       end
     end
 
+    def self.paths_delegate(name)
+      define_method(name) do
+        return nil unless @paths
+
+        @paths.send(name)
+      end
+    end
+
     def initialize(*arguments)
       super
 
-      @identifier = [@name, @version].join(?-)
+      @identifier = [name, version].join(?-)
     end
 
     attribute  :name,       Types::Symbol
@@ -33,6 +42,17 @@ module Package
     attribute? :on_package, Types::Callback
 
     attr_reader :identifier
+
+    attr_accessor :paths
+
+    paths_delegate :archive_path
+    paths_delegate :checksum_path
+    paths_delegate :signature_path
+    paths_delegate :build_path
+    paths_delegate :lock_path
+    paths_delegate :checksum_lock_path
+    paths_delegate :signature_lock_path
+    paths_delegate :build_lock_path
 
   end
 end

@@ -45,17 +45,8 @@ if load_results.has_failures?
   puts load_results.error_messages.lines.map { |line| '  ' + line }.join
 end
 
-# Set up all automatic package attributes
-packages.each do |package|
-  package.archive_path        = paths.sources.join(package.archive_basename)
-  package.checksum_path       = paths.sources.join(package.identifier).append_ext('.checksum')  if package.checksum?
-  package.signature_path      = paths.sources.join(package.identifier).append_ext('.signature') if package.signature?
-  package.build_path          = paths.builds.join(package.identifier)
-  package.lock_path           = paths.tmp.join(package.identifier)
-  package.checksum_lock_path  = package.lock_path.join('checksum.lock')  if package.checksum?
-  package.signature_lock_path = package.lock_path.join('signature.lock') if package.signature?
-  package.build_lock_path     = package.lock_path.join('build.lock')
-end
+# Add our `paths`/`Paths.all` to our packages to allow us to use `*_path` methods on the packages
+packages.with_paths!(paths)
 
 # == Clean =========================================================================================
 

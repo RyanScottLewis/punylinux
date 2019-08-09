@@ -3,12 +3,8 @@ require 'list'
 module Package
   class List < ::List
 
-    def sources
-      map(&:sources).flatten
-    end
-
-    def source_paths
-      map(&:source_paths).flatten
+    def with_paths!(paths)
+      each { |package| PathResolver.call(paths, package) }
     end
 
     def archive_paths
