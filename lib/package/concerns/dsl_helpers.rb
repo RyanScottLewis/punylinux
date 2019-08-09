@@ -1,44 +1,59 @@
-require 'package/struct'
-
 module Package
   module DSLHelpers
 
     module ClassMethods
 
       def dsl_property(name)
-        define_method(name) do |*arguments|
-          raise ArgumentError, "argument length must be 0..1 (got #{arguments.length})" unless arguments.length <= 1
-
-          arguments.length == 1 ? @package.send("#{name}=", arguments.first) : @package.send(name)
+        define_method(name) do |value=nil|
+          value.nil? ? @attributes[name] : @attributes[name] = value
         end
       end
 
       def dsl_callback(name)
         define_method(name) do |&block|
-          if block.nil?
-            @package.send(name)
-          else
-            @package.send("#{name}=", block)
-          end
+          return @attributes[name] if block.nil?
+
+          @attributes[name] = block
         end
       end
 
-      def call(package=Struct.new, &block)
-        new(package).call(&block)
+      def call(&block)
+        new.call(&block)
+      end
+
+      def load(path)
+        new.load(path)
       end
 
     end
 
     module InstanceMethods
 
-      def initialize(package)
-        @package = package
+      def initialize
+        @attributes = {}
       end
 
       def call(&block)
-        instance_eval(&block)
+        update do
+          instance_eval(&block)
+        end
+      end
 
-        @package
+      def load(path)
+        update do
+          instance_eval(File.read(path), path)
+        end
+      end
+
+      protected
+
+      def update
+        @attributes.clear
+        yield
+        attributes = @attributes.dup
+        @attributes.clear
+
+        attributes
       end
 
     end
