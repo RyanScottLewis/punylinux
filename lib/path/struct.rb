@@ -73,6 +73,10 @@ module Path
       self.class.new(path: File.dirname(path))
     end
 
+    def sub_ext(ext)
+      self.class.new(path: path.to_s.gsub(/#{extname}$/, ext))
+    end
+
     def append_ext(ext)
       self.class.new(path: "#{path}#{ext}")
     end

@@ -42,12 +42,7 @@ module Package
         when 'json'        then load_json(path)
         end
       end
-
-      LoadResults.new(load_results)
-    end
-
-    def load_all(directory)
-      load_results = load_directory(directory)
+      load_results = LoadResults.new(load_results)
 
       all.push(*load_results.to_structs)
 

@@ -1,6 +1,7 @@
 require 'dry/struct'
 require 'package/types'
 require 'package/path_resolver'
+require 'path'
 
 module Package
   class Struct < Dry::Struct
@@ -9,7 +10,7 @@ module Package
       super
 
       define_method("#{name}?") do
-        !!instance_variable_get("@#{name}")
+        !send("#{name}").nil?
       end
     end
 
@@ -18,6 +19,12 @@ module Package
         return nil unless @paths
 
         @paths.send(name)
+      end
+
+      define_method("#{name}=") do |value|
+        return nil unless @paths
+
+        @paths.send("#{name}=", value)
       end
     end
 

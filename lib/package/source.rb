@@ -1,15 +1,21 @@
 require 'uri'
 require 'forwardable'
 require 'path/struct'
+require 'rake/file_utils'
 
 module Package
   class Source
 
     extend Forwardable
 
+    include FileUtils
+
     def initialize(value)
+      @value   = value
       self.uri = value
     end
+
+    attr_reader :value
 
     attr_reader :uri
 
@@ -24,11 +30,15 @@ module Package
     def_delegators :path, :basename
 
     def internal?
-      @uri.is_a?(URI::Generic) || @uri.is_a?(URI::File)
+      @uri.class == URI::Generic
+    end
+
+    def file?
+      @uri.is_a?(URI::File)
     end
 
     def external?
-      !internal?
+      !internal? && !file?
     end
 
   end

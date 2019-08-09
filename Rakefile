@@ -4,11 +4,6 @@ require 'rake/clean'
 require 'package/import'
 require 'path/import'
 
-# TODO: Move to file
-def download(url, path)
-  sh "curl -L '#{url}' --output '#{path}'"
-end
-
 # == Paths =========================================================================================
 # Usage:
 #   path :foo                                       # paths.foo => 'foo'
@@ -35,18 +30,17 @@ path :initrd,     paths.boot.join('initrd.img')                        # Linux r
 
 # == Packages ======================================================================================
 
-# Load all packages specifications
-load_results = Package.load_all('pkg')
+# Load all package specifications
+  load_results = Package.load_directory(paths.pkg)
 
-puts "* Packages loaded: %s" % packages.map(&:name).join(', ')
+  puts "* Packages loaded: %s" % packages.map(&:name).join(', ')
 
-if load_results.has_failures?
-  puts "* Packages failed:"
-  puts load_results.error_messages.lines.map { |line| '  ' + line }.join
-end
+  if load_results.has_failures?
+    puts "* Packages failed:"
+    puts load_results.error_messages.lines.map { |line| '  ' + line }.join
+  end
 
-# Add our `paths`/`Paths.all` to our packages to allow us to use `*_path` methods on the packages
-packages.with_paths!(paths)
+  packages.with_paths!(paths)
 
 # == Clean =========================================================================================
 
@@ -62,11 +56,11 @@ desc 'See: package'
 task default: :package
 
 desc 'List all paths & packages'
-task :list do
+task :list do # TODO: Formatter or Printer classes
   puts 'Paths'
   longest_path_name = paths.map(&:name).map(&:length).max
   paths.each do |path|
-    puts "  %s = %s" % [path.name.to_s.ljust(longest_path_name), path.value]
+    puts "  %s = %s" % [path.name.to_s.ljust(longest_path_name), path.path]
   end
 
   puts '', 'Packages'
@@ -76,28 +70,22 @@ task :list do
     puts "  %s %s = %s" % [
       package.name.to_s.ljust(longest_package_name),
       package.version.ljust(longest_package_version),
-      package.archive
+      package.archive.uri
     ]
   end
 end
 
 desc 'Download all package sources'
-task download: packages.source_paths
-
-desc 'Verify checksum on all package sources'
-task check: packages.checksum_lock_paths
-
-desc 'Verify signature on all package sources'
-task verify: packages.signature_lock_paths
+task download: packages.archive_paths
 
 desc 'Decompress all package sources'
 task decompress: packages.build_paths
 
-desc 'Build all package sources'
-task build: paths.build_lock_paths
+#desc 'Build all package sources'
+#task build: paths.build_lock_paths
 
-desc 'Install all package builds'
-task package: packages.build_files
+#desc 'Install all package builds'
+#task package: packages.build_files
 
 #desc 'Generate ISO image'
 #task generate_iso: [:compress, packages.syslinux.] do
@@ -110,9 +98,14 @@ task package: packages.build_files
 
 directory paths.sources.to_dir
 directory paths.builds.to_dir
+directory paths.tmp.to_dir
 directory paths.build_root.to_dir
 directory paths.boot.to_dir
 directory paths.linux_config_source.dirname.to_dir
+
+packages.each do |package|
+  directory package.lock_path
+end
 
 # =- Files -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 

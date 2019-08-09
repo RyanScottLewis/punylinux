@@ -1,4 +1,5 @@
 require 'list'
+require 'package/path_resolver'
 
 module Package
   class List < ::List
@@ -25,14 +26,6 @@ module Package
 
     def with_checksums
       select(&:checksum?)
-    end
-
-    def with_external_checksums
-      with_checksums.select(&:external_checksum?)
-    end
-
-    def with_internal_checksums
-      with_checksums.select(&:internal_checksum?)
     end
 
     def checksum_paths
