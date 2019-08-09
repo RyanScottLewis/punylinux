@@ -13,6 +13,8 @@ module Package
       @all ||= List.new
     end
 
+    # TODO: Abstract into a loader class
+
     def load_ruby(path)
       load_file(path) do
         DSL.load(path)
