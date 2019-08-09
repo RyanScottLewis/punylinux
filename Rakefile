@@ -1,7 +1,8 @@
 $LOAD_PATH.unshift(File.expand_path(File.join("..", "lib"), __FILE__))
-require "rake/clean"
-require "package/import"
-require "path/import"
+require 'bundler/setup'
+require 'rake/clean'
+require 'package/import'
+require 'path/import'
 
 # TODO: Move to file
 def download(url, path)
@@ -34,9 +35,14 @@ path :initrd,     paths.boot.join('initrd.img')                        # Linux r
 
 # == Packages ======================================================================================
 
-# Load all packages files and use each individual file contents to define a package
-paths.pkg.glob('*.rb').each do |path|
-  package { instance_eval(path.read, path.to_s) }
+# Load all packages specifications
+load_results = Package.load_all('pkg')
+
+puts "* Packages loaded: %s" % packages.map(&:name).join(', ')
+
+if load_results.has_failures?
+  puts "* Packages failed:"
+  puts load_results.error_messages.lines.map { |line| '  ' + line }.join
 end
 
 # Set up all automatic package attributes
@@ -63,10 +69,6 @@ CLOBBER.include paths.build
 
 desc 'See: package'
 task default: :package
-
-task :debug do
-  pp packages[1]
-end
 
 desc 'List all paths & packages'
 task :list do
