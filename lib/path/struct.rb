@@ -8,8 +8,8 @@ module Path
     def initialize(name: nil, path: nil, &block)
       raise ArgumentError, "Cannot pass both a path and a block" if block_given? && !path.nil?
 
-      self.name = name                        unless name.nil?
-      self.path = block_given? ? block : path unless !block_given? && path.nil?
+      self.name = name                       unless name.nil?
+      self.path = !block.nil? ? block : path unless block.nil? && path.nil?
     end
 
     attr_reader :name
@@ -19,18 +19,21 @@ module Path
     end
 
     def path
-      return nil        if @name.nil? && @path.nil?
-      return @name.to_s if @path.nil?
+      return nil if @name.nil? && @path.nil?
 
       @path = @path.call if @path.is_a?(Proc)
+      return @name.to_s if @path.nil?
 
       @path
     end
-    alias_method :to_s,   :path
+
+    def to_s
+      path.to_s
+    end
     alias_method :to_str, :to_s
 
     def path=(value)
-      @path = value.to_s unless value.is_a?(Proc)
+      @path = value.is_a?(Proc) ? value : value.to_s
 
       @path
     end
