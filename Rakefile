@@ -122,7 +122,7 @@ namespace :run do
   task build: packages.build_lock_paths
 
   desc 'Install all package builds'
-  task install: packages.install_paths
+  task install: [paths.fhs_paths.explode, packages.install_paths].flatten
 
   #desc 'Generate ISO image'
   #task generate_iso: [:compress, packages.syslinux.] do

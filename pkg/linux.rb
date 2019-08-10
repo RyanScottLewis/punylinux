@@ -4,19 +4,6 @@ archive   "https://kernel.org/pub/linux/kernel/v#{version.split(?.).first}.x/lin
 checksum  'c645402843f90a69426975f8923923dfc6edebb5d1bc0092560ffb7135d3cd96'
 signature archive.gsub(/xz$/, 'sign')
 files     %W(
-  /bin
-  /boot
-  /dev
-  /etc
-  /lib
-  /proc
-  /sbin
-  /sys
-  /tmp
-  /usr
-  /usr/bin
-  /usr/sbin
-
   /boot/vmlinuz
 )
 
@@ -35,13 +22,7 @@ on_build do |package|
   EOS
 end
 
-on_install do |package| # TODO: Move Filesystem Hierarchy Standard dirs and initrd to outside this pkg
-  puts "* Creating Linux Filesystem Hierarchy directories"
-  sh <<~EOS
-    mkdir -p #{package.install_paths[0...-1].join(' ')}
-  EOS
-
-  puts "* Installing Linux"
+on_install do |package|
   kernel_path = package.build_path.join('arch/x86/boot/bzImage')
   sh <<~EOS
     cp '#{kernel_path}' '#{package.install_paths.last}'
