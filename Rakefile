@@ -39,7 +39,7 @@ path name: :kernel,     path: -> { packages.linux.build_path.join(*%w[arch x86 b
 path name: :task_paths, path: paths.tasks.join('**', '*.{rake,rb}')
 path name: :fhs_paths,  path: paths.build_root.join(FHS_GLOB)
 path name: :fs_paths,   path: paths.fs.join('**', '*')
-path name: :fs_targets, path: paths.fs_paths.glob.map { |path| path.sub(paths.fs, paths.build_root) }.join(?;)
+path name: :fs_targets, path: paths.fs_paths.glob.sub(paths.fs, paths.build_root).join
 
 # == Packages ======================================================================================
 

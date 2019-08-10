@@ -20,6 +20,14 @@ module Path
       values.map(&:length).max
     end
 
+    def join(separator=File::PATH_SEPARATOR)
+      super(separator)
+    end
+
+    def sub(pattern, replacement)
+      self.class.new map { |path| path.sub(pattern, replacement) }
+    end
+
   end
 end
 
