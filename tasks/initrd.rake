@@ -6,13 +6,13 @@ dependencies = [
   paths.initrd.dirname
 ].flatten
 
-exclude = paths.initrd.value.gsub(/#{paths.build_root}\/?/, '')
-
 file paths.initrd => dependencies do
   sh <<~EOS
+    ln -sf '#{paths.build_root.join('bin', 'busybox')}' '#{paths.build_root.join('init')}'
     pushd '#{paths.build_root}' > /dev/null
-    find . -print -not -path '#{exclude}' | cpio -o -H newc | gzip -9 > initrd
+    find . -print | cpio -o -H newc | gzip -9 > initrd
     popd > /dev/null
+    rm -f '#{paths.build_root.join('init')}'
     mv '#{paths.build_root.join('initrd')}' '#{paths.initrd}'
   EOS
 end
