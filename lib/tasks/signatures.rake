@@ -14,7 +14,7 @@ packages.with_signatures.each do |package|
   end
 
   # Verify signature
-  file package.signature_lock_path => package.signature_path do |task|
+  file package.signature_lock_path => [package.signature_path, package.lock_path] do |task|
     if package.on_verify?
       instance_exec(package, &package.on_verify)
     else
