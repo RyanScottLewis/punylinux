@@ -10,12 +10,15 @@ require 'path/import'
 #   path :bar, 'foo/bar'                            # paths.bar => 'foo/bar'
 #   path(:baz) { some_global_not_yet_defined.path } # paths.baz => 'value_of_global' # Lazily-defined
 
+path :rakefile, 'Rakefile'                                             # This Rakefile
+
 path :build                                                            # Linux root, ISO image root, etc.
+path :doc                                                              # Project documentation
 path :lib                                                              # Library sources (Ruby code for this Rakefile)
+path :pkg                                                              # Package definitions
 path :src                                                              # Project sources
 path :tmp                                                              # Temporary file storage
 path :var                                                              # Variable file storage
-path :pkg                                                              # Package definitions
 
 path :fs,                  paths.src.join('fs')                        # Files to import into the Linux root path
 path :linux_config_source, paths.src.join('linux', 'config')           # Linux build configuration source
@@ -28,23 +31,28 @@ path :build_root, paths.build.join('root')                             # Linux r
 path :boot,       paths.build_root.join('boot')                        # Linux root path - boot/
 path :initrd,     paths.boot.join('initrd.img')                        # Linux root path - boot/initrd.img # TODO: Use initrd.gz
 
+path :tasks,        paths.lib.join('tasks')                            # Rake tasks directory
+path :task_pattern, paths.tasks.join('**', '*.{rake,rb}')              # Rake tasks glob pattern
+path :task_graph,   paths.doc.join('task_graph.png')                   # Rake task dependency graph
+
 # == Packages ======================================================================================
 
 # Load all package specifications
-  load_results = Package.load_directory(paths.pkg)
+load_results = Package.load_directory(paths.pkg)
 
-  if load_results.has_failures?
-    puts "WARN: Packages failed:"
-    puts load_results.error_messages.lines.map { |line| '  ' + line }.join
-  end
+if load_results.has_failures?
+  puts "WARN: Packages failed:"
+  puts load_results.error_messages.lines.map { |line| '  ' + line }.join
+end
 
-  packages.with_paths!(paths)
+packages.with_paths!(paths)
 
 # == Clean =========================================================================================
 
 CLEAN.include paths.linux_config_source
 CLEAN.include paths.sources
 CLEAN.include paths.tmp
+CLEAN.include paths.task_graph
 
 CLOBBER.include paths.build
 CLOBBER.include paths.var
@@ -94,39 +102,24 @@ task build: packages.build_lock_paths
 
 #end
 
-require 'rgl/dot'
-require 'rgl/implicit'
-
 desc "Generate dependency graph of rake tasks"
-task :dep_graph do |task|
-  this_task = task.name
+task task_graph: paths.task_graph
 
-  dep = RGL::ImplicitGraph.new do |g|
-    # vertices of the graph are all defined tasks without this task
-    g.vertex_iterator do |b|
-      Rake::Task.tasks.each do |t|
-        b.call(t) unless t.name == this_task
-      end
-    end
-    # neighbors of task t are its prerequisites
-    g.adjacent_iterator { |t, b| t.prerequisites.each(&b) }
-    g.directed = true
-  end
 
-  dep.write_to_graphic_file('png', this_task)
-  puts "Wrote dependency graph to #{this_task}.png."
-end
 
 # == Rules =========================================================================================
 
 # =- Directories -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-directory paths.sources.to_dir
-directory paths.builds.to_dir
-directory paths.tmp.to_dir
-directory paths.build_root.to_dir
 directory paths.boot.to_dir
+directory paths.doc.to_dir
+directory paths.tmp.to_dir
+
+directory paths.builds.to_dir
+directory paths.sources.to_dir
+
 directory paths.linux_config_source.dirname.to_dir
+directory paths.build_root.to_dir
 
 packages.each do |package|
   directory package.lock_path
@@ -134,7 +127,7 @@ end
 
 # =- Files -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-paths.lib.join('tasks', '**', '*.{rake,rb}').glob.each do |path|
+paths.task_pattern.glob.each do |path|
   load(path)
 end
 
