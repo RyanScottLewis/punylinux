@@ -6,11 +6,13 @@ require 'path/import'
 
 # == Paths =========================================================================================
 
-path name: :rakefile,            path: 'Rakefile',                                       description: 'The main Rakefile'
+FHS      = %w(bin boot dev etc lib proc sbin sys tmp usr/bin usr/sbin)
+FHS_GLOB = "{#{FHS.join(?,)}}"
 
+# Descriptive paths
 path name: :build,                                                                       description: 'Linux root, ISO image root, etc.'
 path name: :doc,                                                                         description: 'Project documentation'
-path name: :lib,                                                                         description: 'Library sources (Ruby code for this Rakefile)'
+path name: :lib,                                                                         description: 'Library sources'
 path name: :pkg,                                                                         description: 'Package definitions'
 path name: :src,                                                                         description: 'Project sources'
 path name: :tmp,                                                                         description: 'Temporary file storage'
@@ -23,13 +25,17 @@ path name: :linux_config,        path: -> { packages.linux.build_path.join('.con
 path name: :builds,              path: paths.var.join('builds'),                         description: 'Package builds'
 path name: :sources,             path: paths.var.join('sources'),                        description: 'Package sources'
 
-path name: :build_root,          path: paths.build.join('root'),                         description: 'Linux root path - /'
-path name: :boot,                path: paths.build_root.join('boot'),                    description: 'Linux root path - boot/'
-path name: :initrd,              path: paths.boot.join('initrd.img'),                    description: 'Linux root path - boot/initrd.img' # TODO: Use initrd.gz
-
-path name: :tasks,               path: paths.lib.join('tasks'),                          description: 'Rake tasks directory'
-path name: :task_pattern,        path: paths.tasks.join('**', '*.{rake,rb}'),            description: 'Rake tasks glob pattern'
 path name: :task_graph,          path: paths.doc.join('task_graph.png'),                 description: 'Rake task dependency graph'
+
+# Undescriptive paths
+path name: :rakefile,   path: 'Rakefile'
+
+path name: :build_root, path: paths.build.join('root')
+path name: :boot,       path: paths.build_root.join('boot')
+path name: :initrd,     path: paths.boot.join('initrd.img')
+
+path name: :tasks,      path: paths.lib.join('tasks').join('**', '*.{rake,rb}')
+path name: :fhs_paths,  path: paths.build_root.join(FHS_GLOB)
 
 # == Packages ======================================================================================
 
@@ -131,8 +137,7 @@ end
 
 # == Rules =========================================================================================
 
-paths.task_pattern.glob.each do |path|
+paths.tasks.glob.each do |path|
   load(path)
 end
-
 

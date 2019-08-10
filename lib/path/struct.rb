@@ -29,7 +29,7 @@ module Path
       !!@description && !@description.empty? # TODO: Why the need to check for empty?
     end
 
-    def path
+    def path # TODO: This leads to things like `path.path` which makes me want to get stomped to death by baby elephants. Rename to something like `location`
       return nil if @name.nil? && @path.nil?
 
       @path = @path.call if @path.is_a?(Proc)
@@ -70,6 +70,23 @@ module Path
       pattern = pattern.nil? ? path : join(pattern)
 
       Dir[pattern].map { |path| self.class.new(path: path) }
+    end
+
+    # Take a glob pattern with alternations and explode into individual paths
+    # Only handles a single set of alternations, i.e. `/foo/bar/{baz,qux}`
+    def explode(pattern=nil)
+      pattern = pattern.nil? ? path : join(pattern)
+      match   = pattern.match(/{.+}/) # TODO: Scan and iterate to match multiple alternation sets
+
+      return [self] unless match
+
+      alternations = match.to_s.gsub(/^{|}$/, '').split(?,).map(&:strip)
+
+      alternations.map do |alternation|
+        pattern.dup.tap do |path|
+          path[match.regexp] = alternation
+        end
+      end
     end
 
     def join(*arguments)
