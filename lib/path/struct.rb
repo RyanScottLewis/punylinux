@@ -8,9 +8,9 @@ module Path
     def initialize(name: nil, path: nil, description: nil, &block)
       raise ArgumentError, "Cannot pass both a path and a block" if block_given? && !path.nil?
 
-      self.name = name                       unless name.nil?
-      self.path = !block.nil? ? block : path unless block.nil? && path.nil?
-      @description = description
+      self.name        = name                       unless name.nil?
+      self.path        = !block.nil? ? block : path unless block.nil? && path.nil?
+      self.description = description
     end
 
     attr_reader :name
