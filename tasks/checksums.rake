@@ -18,6 +18,8 @@ packages.with_checksums.each do |package|
   end
 
   # Verify checksum
+  directory package.lock_path
+
   file package.checksum_lock_path => [package.checksum_path, package.lock_path] do |task|
     sh "cd '#{paths.sources}' && sha256sum --quiet --check '#{package.checksum_path.basename}'"
     sh "touch '#{package.checksum_lock_path}'"

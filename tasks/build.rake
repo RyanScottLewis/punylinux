@@ -1,5 +1,7 @@
 packages.each do |package|
 
+  directory package.lock_path
+
   dependencies = [package.lock_path, package.build_path]
   dependencies << paths.linux_config if package.name == :linux
 
