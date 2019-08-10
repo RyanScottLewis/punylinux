@@ -30,9 +30,9 @@ path name: :task_graph,          path: paths.doc.join('task_graph.png'),        
 # Undescriptive paths
 path name: :rakefile,   path: 'Rakefile'
 
-path name: :build_root, path: paths.build.join('root')
+path name: :build_root, path: paths.build.join('root') # TODO: Rename to just `root`
 path name: :boot,       path: paths.build_root.join('boot')
-path name: :initrd,     path: paths.boot.join('initrd.img')
+path name: :initrd,     path: paths.boot.join('initrd.img') # TODO: Use .gz
 
 path name: :tasks,      path: paths.lib.join('tasks').join('**', '*.{rake,rb}')
 path name: :fhs_paths,  path: paths.build_root.join(FHS_GLOB)
@@ -108,6 +108,9 @@ namespace :run do
       ]
     end
   end
+
+  # TODO: Why do I even need these? They were more for debugging...
+  # I guess it's nice to have the option
 
   desc 'Download all package sources'
   task download: packages.archive_paths
