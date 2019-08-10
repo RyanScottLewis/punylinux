@@ -14,7 +14,7 @@ module Package
 
     dsl_callback :on_verify
     dsl_callback :on_build
-    dsl_callback :on_package
+    dsl_callback :on_install
 
   end
 end

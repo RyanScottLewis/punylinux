@@ -46,7 +46,7 @@ module Package
     attribute? :on_build,   Types::Callback
     attribute? :on_check,   Types::Callback
     attribute? :on_verify,  Types::Callback
-    attribute? :on_package, Types::Callback
+    attribute? :on_install, Types::Callback
 
     attr_reader :identifier
 

@@ -17,7 +17,7 @@ module Package
     optional(:on_build).filled(Types::Callback)
     optional(:on_check).filled(Types::Callback)
     optional(:on_verify).filled(Types::Callback)
-    optional(:on_package).filled(Types::Callback)
+    optional(:on_install).filled(Types::Callback)
   end
 
 end

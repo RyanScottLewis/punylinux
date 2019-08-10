@@ -12,7 +12,7 @@ on_build do |package|
   EOS
 end
 
-on_package do |package|
+on_install do |package|
   sh <<~EOS
     cd '#{package.build_path}'
     make install &> /dev/null
