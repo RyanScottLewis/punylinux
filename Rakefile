@@ -113,8 +113,8 @@ namespace :run do
   desc 'Build all package sources'
   task build: packages.build_lock_paths
 
-  #desc 'Install all package builds'
-  #task package: packages.build_files
+  desc 'Install all package builds'
+  task package: packages.install_files
 
   #desc 'Generate ISO image'
   #task generate_iso: [:compress, packages.syslinux.] do

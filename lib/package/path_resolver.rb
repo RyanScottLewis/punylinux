@@ -14,6 +14,8 @@ module Package
       attr_accessor :signature_lock_path
       attr_accessor :build_lock_path
 
+      attr_accessor :install_files
+
     end
 
     def self.call(paths, package)
@@ -35,6 +37,8 @@ module Package
       struct.checksum_lock_path  = struct.lock_path.join('checksum.lock')  if package.checksum?
       struct.signature_lock_path = struct.lock_path.join('signature.lock') if package.signature?
       struct.build_lock_path     = struct.lock_path.join('build.lock')
+
+      struct.install_files       = package.files.map { |path| @paths.build_root.join(path) } if package.files?
 
       package.paths = struct
 
