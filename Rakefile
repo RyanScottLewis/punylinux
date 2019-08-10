@@ -55,57 +55,76 @@ CLOBBER.include paths.var
 
 # == Tasks =========================================================================================
 
-desc 'See: package'
-task default: :package
+desc 'See: run:package'
+task default: 'run:package'
 
-desc 'List all paths & packages'
-task :list do # TODO: Formatter or Printer classes
-  puts 'Paths'
-  longest_path_name = paths.map(&:name).map(&:length).max
-  longest_path_path = paths.map(&:path).map(&:to_s).map(&:length).max # TODO: path... path? path_path.. C'mon son
-  paths.each do |path|
-    puts "  %s = %s # %s" % [
-      path.name.to_s.ljust(longest_path_name),
-      path.to_s.ljust(longest_path_path), # TODO: PATH PATH!!
-      path.description
-    ]
+# Namespace exists because Rake is stupid (well, Rake is based on Make, which is also stupid in this
+# same way...) There is no distinction between 'tasks' and 'files'/'directory'. So, if I have a file
+# named 'foo', a directory 'foo/' and a task 'foo'; then I call `rake foo`, what in the world
+# happens?
+#
+# In this case, we have a task `build` and a directory `build` (like almost /all/ build automation
+# scripts I write.) One workaround is to define & refer to directories with a `/` suffix, i.e. `foo/`
+# This is fine and dandy for simple projects, however Rake breaks out `directory` in an interesting
+# way. `directory 'foo/bar/'` ends up writing a "file" task for `foo/bar/` and `foo` which calls
+# `mkdir -p`. You will notice that the automatically generated file task for the parent directory
+# has NO `/` suffix. Rake gives no fucks about your conventions, only it's own.
+#
+# Therefore, instead of having conflicting task names for `build` or whatever others may come up in
+# the future, functional tasks are defined here and file/directory tasks are defined normally in the
+# global namespace as normal.
+
+namespace :run do
+
+  desc 'List all paths & packages'
+  task :list do # TODO: Formatter or Printer classes
+    puts 'Paths'
+    longest_path_name = paths.map(&:name).map(&:length).max
+    longest_path_path = paths.map(&:path).map(&:to_s).map(&:length).max # TODO: path... path? path_path.. C'mon son
+    paths.each do |path|
+      puts "  %s = %s # %s" % [
+        path.name.to_s.ljust(longest_path_name),
+        path.to_s.ljust(longest_path_path), # TODO: PATH PATH!!
+        path.description
+      ]
+    end
+
+    puts '', 'Packages'
+    longest_package_name    = packages.map(&:name).map(&:length).max
+    longest_package_version = packages.map(&:version).map(&:length).max
+    packages.each do |package|
+      puts "  %s %s = %s" % [
+        package.name.to_s.ljust(longest_package_name),
+        package.version.ljust(longest_package_version),
+        package.archive.uri
+      ]
+    end
   end
 
-  puts '', 'Packages'
-  longest_package_name    = packages.map(&:name).map(&:length).max
-  longest_package_version = packages.map(&:version).map(&:length).max
-  packages.each do |package|
-    puts "  %s %s = %s" % [
-      package.name.to_s.ljust(longest_package_name),
-      package.version.ljust(longest_package_version),
-      package.archive.uri
-    ]
-  end
+  desc 'Download all package sources'
+  task download: packages.archive_paths
+
+  desc 'Check all package checksums'
+  task check: packages.checksum_lock_paths
+
+  desc 'Verify all package signatures'
+  task verify: packages.signature_lock_paths
+
+  desc 'Build all package sources'
+  task build: packages.build_lock_paths
+
+  #desc 'Install all package builds'
+  #task package: packages.build_files
+
+  #desc 'Generate ISO image'
+  #task generate_iso: [:compress, packages.syslinux.] do
+
+  #end
+
+  desc "Generate dependency graph of rake tasks"
+  task task_graph: paths.task_graph
+
 end
-
-desc 'Download all package sources'
-task download: packages.archive_paths
-
-desc 'Check all package checksums'
-task check: packages.checksum_lock_paths
-
-desc 'Verify all package signatures'
-task verify: packages.signature_lock_paths
-
-desc 'Build all package sources'
-task build: packages.build_lock_paths
-
-#desc 'Install all package builds'
-#task package: packages.build_files
-
-#desc 'Generate ISO image'
-#task generate_iso: [:compress, packages.syslinux.] do
-
-#end
-
-desc "Generate dependency graph of rake tasks"
-task task_graph: paths.task_graph
-
 
 
 # == Rules =========================================================================================
