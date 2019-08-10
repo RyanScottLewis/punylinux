@@ -33,6 +33,7 @@ path name: :rakefile,   path: 'Rakefile'
 path name: :build_root, path: paths.build.join('root') # TODO: Rename to just `root`
 path name: :boot,       path: paths.build_root.join('boot')
 path name: :initrd,     path: paths.boot.join('initrd.img') # TODO: Use .gz
+path name: :kernel,     path: -> { packages.linux.build_path.join(*%w[arch x86 boot bzImage]) } # TODO: Use `uname -m`
 
 path name: :tasks,      path: paths.lib.join('tasks').join('**', '*.{rake,rb}')
 path name: :fhs_paths,  path: paths.build_root.join(FHS_GLOB)
@@ -61,8 +62,8 @@ CLOBBER.include paths.var
 
 # == Tasks =========================================================================================
 
-desc 'See: run:package'
-task default: 'run:package'
+desc 'See: run:initrd'
+task default: 'run:initrd'
 
 # Namespace exists because Rake is stupid (well, Rake is based on Make, which is also stupid in this
 # same way...) There is no distinction between 'tasks' and 'files'/'directory'. So, if I have a file
@@ -126,6 +127,9 @@ namespace :run do
 
   desc 'Install all package builds'
   task install: packages.install_paths
+
+  desc 'Generate initial ramdisk'
+  task initrd: paths.initrd
 
   #desc 'Generate ISO image'
   #task generate_iso: [:compress, packages.syslinux.] do

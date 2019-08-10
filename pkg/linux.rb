@@ -23,14 +23,8 @@ on_build do |package|
 end
 
 on_install do |package|
-  kernel_path = package.build_path.join('arch/x86/boot/bzImage')
   sh <<~EOS
-    cp '#{kernel_path}' '#{package.install_paths.last}'
-  EOS
-
-  puts "* Generating inital ramdisk"
-  sh <<~EOS
-    find '#{paths.build}' -print | cpio -o -H newc | gzip -9 > '#{paths.initrd}'
+    cp '#{paths.kernel}' '#{package.install_paths.last}'
   EOS
 end
 
