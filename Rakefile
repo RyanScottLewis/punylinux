@@ -36,7 +36,7 @@ path name: :boot,       path: paths.build_root.join('boot')
 path name: :initrd,     path: paths.boot.join('initrd.img') # TODO: Use .gz
 path name: :kernel,     path: -> { packages.linux.build_path.join(*%w[arch x86 boot bzImage]) } # TODO: Use `uname -m`
 
-path name: :task_paths, path: paths.lib.join('tasks').join('**', '*.{rake,rb}')
+path name: :task_paths, path: paths.tasks.join('**', '*.{rake,rb}')
 path name: :fhs_paths,  path: paths.build_root.join(FHS_GLOB)
 
 # == Packages ======================================================================================
