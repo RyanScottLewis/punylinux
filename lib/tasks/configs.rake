@@ -1,4 +1,4 @@
-file paths.linux_config_source => paths.linux_config_source.dirname.to_dir do
+file paths.linux_config_source => paths.linux_config_source.dirname do
   sh <<~EOS
     pushd '#{packages.linux.build_path}'
     make defconfig

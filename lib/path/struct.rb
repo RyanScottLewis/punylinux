@@ -91,10 +91,6 @@ module Path
       self.class.new(path: "#{path}#{ext}")
     end
 
-    def to_dir
-      self.class.new(path: "#{path}/")
-    end
-
   end
 end
 

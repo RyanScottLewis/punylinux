@@ -15,8 +15,6 @@
 * Files can accept either an array of strings or an file/URL
 * Load tasks from files within `src/tasks`
 * Use fakeroot?
-* When defining a `path`, allow `directory: true` which will return with an ending slash for `to_s`
-  This should eliminate the need for `#to_dir` entirely
 
 ## Refactor
 

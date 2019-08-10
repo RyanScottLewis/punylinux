@@ -131,15 +131,15 @@ end
 
 # =- Directories -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-directory paths.boot.to_dir
-directory paths.doc.to_dir
-directory paths.tmp.to_dir
+directory paths.boot
+directory paths.doc
+directory paths.tmp
 
-directory paths.builds.to_dir
-directory paths.sources.to_dir
+directory paths.builds
+directory paths.sources
 
-directory paths.linux_config_source.dirname.to_dir
-directory paths.build_root.to_dir
+directory paths.linux_config_source.dirname
+directory paths.build_root
 
 packages.each do |package|
   directory package.lock_path

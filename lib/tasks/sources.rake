@@ -1,7 +1,7 @@
 packages.each do |package|
 
   # Retrieve archive
-  file package.archive_path => paths.sources.to_dir do
+  file package.archive_path => paths.sources do
     if package.archive.file?
       sh("cp '#{package.archive.path}' '#{package.archive_path}'")
     else
@@ -10,7 +10,7 @@ packages.each do |package|
   end
 
   # Decompress archive
-  dependencies = [package.archive_path, paths.builds.to_dir]
+  dependencies = [package.archive_path, paths.builds]
   dependencies << package.checksum_lock_path  if package.checksum?
   dependencies << package.signature_lock_path if package.signature?
 

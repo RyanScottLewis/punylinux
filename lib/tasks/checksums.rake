@@ -1,7 +1,7 @@
 packages.with_checksums.each do |package|
 
   # Retrieve/generate checksum
-  file package.checksum_path => [package.archive_path, paths.sources.to_dir] do
+  file package.checksum_path => [package.archive_path, paths.sources] do
     if package.checksum.file?
       sh("cp '#{package.checksum.path}' '#{package.checksum_path}'")
     elsif package.checksum.internal?

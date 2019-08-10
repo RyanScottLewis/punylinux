@@ -4,7 +4,7 @@ require 'rgl/implicit'
 dependencies = []
 dependencies << paths.rakefile
 dependencies += paths.task_pattern.glob
-dependencies << paths.doc.to_dir
+dependencies << paths.doc
 
 file paths.task_graph => dependencies do |task|
   this_task = task.name
