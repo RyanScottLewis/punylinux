@@ -56,8 +56,8 @@ module Package
       with_files.map(&:files).flatten
     end
 
-    def install_files
-      with_files.map(&:install_files).flatten
+    def install_paths
+      with_files.map(&:install_paths).flatten
     end
 
   end

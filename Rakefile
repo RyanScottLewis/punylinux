@@ -114,7 +114,7 @@ namespace :run do
   task build: packages.build_lock_paths
 
   desc 'Install all package builds'
-  task package: packages.install_files
+  task package: packages.install_paths
 
   #desc 'Generate ISO image'
   #task generate_iso: [:compress, packages.syslinux.] do

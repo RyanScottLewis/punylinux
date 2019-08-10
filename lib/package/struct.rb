@@ -61,7 +61,7 @@ module Package
     paths_delegate :signature_lock_path
     paths_delegate :build_lock_path
 
-    paths_delegate :install_files
+    paths_delegate :install_paths
 
   end
 end

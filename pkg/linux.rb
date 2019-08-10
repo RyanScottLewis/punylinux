@@ -38,13 +38,13 @@ end
 on_install do |package|
   puts "* Creating Linux Filesystem Hierarchy directories"
   sh <<~EOS
-    mkdir -p #{package.install_files[0...-1].join(' ')}
+    mkdir -p #{package.install_paths[0...-1].join(' ')}
   EOS
 
   puts "* Installing Linux"
   kernel_path = package.build_path.join('arch/x86/boot/bzImage')
   sh <<~EOS
-    cp '#{kernel_path}' '#{package.install_files.last}'
+    cp '#{kernel_path}' '#{package.install_paths.last}'
   EOS
 
   puts "* Generating inital ramdisk"

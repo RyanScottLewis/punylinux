@@ -14,7 +14,7 @@ module Package
       attr_accessor :signature_lock_path
       attr_accessor :build_lock_path
 
-      attr_accessor :install_files
+      attr_accessor :install_paths
 
     end
 
@@ -38,7 +38,7 @@ module Package
       struct.signature_lock_path = struct.lock_path.join('signature.lock') if package.signature?
       struct.build_lock_path     = struct.lock_path.join('build.lock')
 
-      struct.install_files       = package.files.map { |path| @paths.build_root.join(path) } if package.files?
+      struct.install_paths       = package.files.map { |path| @paths.build_root.join(path) } if package.files?
 
       package.paths = struct
 
