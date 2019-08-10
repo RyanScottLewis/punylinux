@@ -2,7 +2,7 @@ directory paths.initrd.dirname
 
 dependencies = [
   packages.install_paths,
-  FS_TARGETS,
+  paths.fs_targets.split,
   paths.initrd.dirname
 ].flatten
 

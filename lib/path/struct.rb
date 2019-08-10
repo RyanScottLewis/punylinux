@@ -93,6 +93,10 @@ module Path
       self.class.new(path: File.join(path, *arguments))
     end
 
+    def split(separator=File::PATH_SEPARATOR)
+      path.split(separator).map { |partial| self.class.new(path: partial) }
+    end
+
     def expand_path(*arguments)
       self.class.new(path: File.expand_path(path, *arguments))
     end

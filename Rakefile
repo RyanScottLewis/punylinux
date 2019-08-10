@@ -39,10 +39,7 @@ path name: :kernel,     path: -> { packages.linux.build_path.join(*%w[arch x86 b
 path name: :task_paths, path: paths.tasks.join('**', '*.{rake,rb}')
 path name: :fhs_paths,  path: paths.build_root.join(FHS_GLOB)
 path name: :fs_paths,   path: paths.fs.join('**', '*')
-
-# TODO: Yeah, I hate this but I have no structure for file lists, I refuse to use Rake's FileList shit
-# and I don't see a reason to make a file list mechanism for a single file list.
-FS_TARGETS = paths.fs_paths.glob.map { |path| path.sub(paths.fs, paths.build_root) }
+path name: :fs_targets, path: paths.fs_paths.glob.map { |path| path.sub(paths.fs, paths.build_root) }.join(?;)
 
 # == Packages ======================================================================================
 
@@ -137,7 +134,7 @@ namespace :os do
   task fhs: paths.fhs_paths.explode
 
   desc 'Synchronize filesystem'
-  task fs: FS_TARGETS # TODO: paths.fs_targets.split # Split by File::PATH_SEPARATOR
+  task fs: paths.fs_targets.split
 
   desc 'Generate initial ramdisk'
   task initrd: paths.initrd
