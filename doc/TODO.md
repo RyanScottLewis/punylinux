@@ -19,6 +19,8 @@
 * Prepend `has_` to query methods for `Package::Struct` (`files?` to `has_files?`)
 * Use system-installed syslinux instead of requiring that it be defined as a package?
   * a(ny) kernel should be the ONLY required package
+* Task dependency graph should severly limit which tasks are output
+  * Possibly all package install files
 
 ## Documentation
 

@@ -68,8 +68,8 @@ CLOBBER.include paths.var
 
 # == Tasks =========================================================================================
 
-desc 'See: run:initrd'
-task default: 'run:initrd'
+desc 'See: os:initrd'
+task default: 'os:initrd'
 
 # Namespace exists because Rake is stupid (well, Rake is based on Make, which is also stupid in this
 # same way...) There is no distinction between 'tasks' and 'files'/'directory'. So, if I have a file
@@ -87,37 +87,7 @@ task default: 'run:initrd'
 # the future, functional tasks are defined here and file/directory tasks are defined normally in the
 # global namespace as normal.
 
-namespace :run do
-
-  desc 'List all paths & packages'
-  task :list do # TODO: Formatter or Printer classes
-    puts 'Paths'
-    descriptive_paths   = paths.with_descriptions
-    name_justification  = descriptive_paths.name_justification
-    value_justification = descriptive_paths.value_justification
-
-    descriptive_paths.each do |path|
-      puts "  %s = %s # %s" % [
-        path.name.to_s.ljust(name_justification),
-        path.value.to_s.ljust(value_justification),
-        path.description
-      ]
-    end
-
-    puts '', 'Packages'
-    longest_package_name    = packages.map(&:name).map(&:length).max
-    longest_package_version = packages.map(&:version).map(&:length).max
-    packages.each do |package|
-      puts "  %s %s = %s" % [
-        package.name.to_s.ljust(longest_package_name),
-        package.version.ljust(longest_package_version),
-        package.archive.uri
-      ]
-    end
-  end
-
-  # TODO: Why do I even need these? They were more for debugging...
-  # I guess it's nice to have the option
+namespace :pkg do
 
   desc 'Download all package sources'
   task download: packages.archive_paths
@@ -134,12 +104,53 @@ namespace :run do
   desc 'Install all package builds'
   task install: packages.install_paths
 
+end
+
+namespace :os do
+
+  desc 'Generate Linux FHS directories'
+  task fhs: paths.fhs_paths.explode
+
+  desc 'Synchronize filesystem'
+  task fs: FS_TARGETS # TODO: paths.fs_targets.split # Split by File::PATH_SEPARATOR
+
   desc 'Generate initial ramdisk'
   task initrd: paths.initrd
+
+end
+
+namespace :doc do
 
   desc "Generate dependency graph of rake tasks"
   task task_graph: paths.task_graph
 
+end
+
+desc 'List all paths & packages'
+task :list do # TODO: Formatter or Printer classes
+  puts 'Paths'
+  descriptive_paths   = paths.with_descriptions
+  name_justification  = descriptive_paths.name_justification
+  value_justification = descriptive_paths.value_justification
+
+  descriptive_paths.each do |path|
+    puts "  %s = %s # %s" % [
+      path.name.to_s.ljust(name_justification),
+      path.value.to_s.ljust(value_justification),
+      path.description
+    ]
+  end
+
+  puts '', 'Packages'
+  longest_package_name    = packages.map(&:name).map(&:length).max
+  longest_package_version = packages.map(&:version).map(&:length).max
+  packages.each do |package|
+    puts "  %s %s = %s" % [
+      package.name.to_s.ljust(longest_package_name),
+      package.version.ljust(longest_package_version),
+      package.archive.uri
+    ]
+  end
 end
 
 # == Rules =========================================================================================
