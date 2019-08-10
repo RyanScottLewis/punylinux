@@ -66,7 +66,7 @@ task :list do # TODO: Formatter or Printer classes
   paths.each do |path|
     puts "  %s = %s # %s" % [
       path.name.to_s.ljust(longest_path_name),
-      path.path.to_s.ljust(longest_path_path), # TODO: PATH PATH!!
+      path.to_s.ljust(longest_path_path), # TODO: PATH PATH!!
       path.description
     ]
   end
