@@ -2,5 +2,7 @@ build/
 var/
 tmp/
 
+doc/task_graph.*
+
 src/linux/config
 
