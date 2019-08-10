@@ -25,6 +25,10 @@ module Path
       @description = value.to_s
     end
 
+    def description?
+      !!@description && !@description.empty? # TODO: Why the need to check for empty?
+    end
+
     def path
       return nil if @name.nil? && @path.nil?
 
@@ -34,9 +38,10 @@ module Path
       @path
     end
 
-    def to_s
+    def value
       path.to_s
     end
+    alias_method :to_s, :value
     alias_method :to_str, :to_s
 
     def path=(value)

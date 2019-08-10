@@ -79,12 +79,14 @@ namespace :run do
   desc 'List all paths & packages'
   task :list do # TODO: Formatter or Printer classes
     puts 'Paths'
-    longest_path_name = paths.map(&:name).map(&:length).max
-    longest_path_path = paths.map(&:path).map(&:to_s).map(&:length).max # TODO: path... path? path_path.. C'mon son
-    paths.each do |path|
+    descriptive_paths   = paths.with_descriptions
+    name_justification  = descriptive_paths.name_justification
+    value_justification = descriptive_paths.value_justification
+
+    descriptive_paths.each do |path|
       puts "  %s = %s # %s" % [
-        path.name.to_s.ljust(longest_path_name),
-        path.to_s.ljust(longest_path_path), # TODO: PATH PATH!!
+        path.name.to_s.ljust(name_justification),
+        path.value.to_s.ljust(value_justification),
         path.description
       ]
     end
