@@ -17,8 +17,9 @@ path name: :pkg,                                                                
 path name: :src,                                                                         description: 'Project sources'
 path name: :tmp,                                                                         description: 'Temporary file storage'
 path name: :var,                                                                         description: 'Variable file storage'
+path name: :fs,                                                                          description: 'Files to import into the Linux root path'
+path name: :tasks,                                                                       description: 'Rake tasks'
 
-path name: :fs,                  path: paths.src.join('fs'),                             description: 'Files to import into the Linux root path'
 path name: :linux_config_source, path: paths.src.join('linux', 'config'),                description: 'Linux build configuration source'
 path name: :linux_config,        path: -> { packages.linux.build_path.join('.config') }, description: 'Linux build configuration target'
 
@@ -35,7 +36,7 @@ path name: :boot,       path: paths.build_root.join('boot')
 path name: :initrd,     path: paths.boot.join('initrd.img') # TODO: Use .gz
 path name: :kernel,     path: -> { packages.linux.build_path.join(*%w[arch x86 boot bzImage]) } # TODO: Use `uname -m`
 
-path name: :tasks,      path: paths.lib.join('tasks').join('**', '*.{rake,rb}')
+path name: :task_paths, path: paths.lib.join('tasks').join('**', '*.{rake,rb}')
 path name: :fhs_paths,  path: paths.build_root.join(FHS_GLOB)
 
 # == Packages ======================================================================================
@@ -144,7 +145,7 @@ end
 
 # == Rules =========================================================================================
 
-paths.tasks.glob.each do |path|
+paths.task_paths.glob.each do |path|
   load(path)
 end
 
