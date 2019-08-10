@@ -1,3 +1,5 @@
+require 'path/list'
+
 module Path
   # Wrapper for paths, very similar to Pathname only can have an optional name and lazily-defined
   # path values.
@@ -68,8 +70,9 @@ module Path
 
     def glob(pattern=nil)
       pattern = pattern.nil? ? path : join(pattern)
+      paths   = Dir[pattern].map { |path| self.class.new(path: path) }
 
-      Dir[pattern].map { |path| self.class.new(path: path) }
+      List.new(paths)
     end
 
     # Take a glob pattern with alternations and explode into individual paths
@@ -81,12 +84,13 @@ module Path
       return [self] unless match
 
       alternations = match.to_s.gsub(/^{|}$/, '').split(?,).map(&:strip)
-
-      alternations.map do |alternation|
+      paths        = alternations.map do |alternation|
         pattern.dup.tap do |path|
           path[match.regexp] = alternation
         end
       end
+
+      List.new(paths)
     end
 
     def join(*arguments)
@@ -94,7 +98,9 @@ module Path
     end
 
     def split(separator=File::PATH_SEPARATOR)
-      path.split(separator).map { |partial| self.class.new(path: partial) }
+      paths = path.split(separator).map { |partial| self.class.new(path: partial) }
+
+      List.new(paths)
     end
 
     def expand_path(*arguments)
