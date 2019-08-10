@@ -21,6 +21,7 @@
   * a(ny) kernel should be the ONLY required package
 * Task dependency graph should severly limit which tasks are output
   * Possibly all package install files
+* Rename `build/root/` to `build/os/`
 
 ## Documentation
 
