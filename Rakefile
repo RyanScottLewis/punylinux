@@ -104,6 +104,25 @@ namespace :pkg do
   desc 'Install all package builds'
   task install: packages.install_paths
 
+  desc 'List all packages'
+  task :list do
+    packages.print
+  end
+
+end
+
+namespace :path do
+
+  desc 'List paths'
+  task :list do
+    paths.print
+  end
+
+  desc 'List all paths'
+  task :all do
+    paths.print(all: true)
+  end
+
 end
 
 namespace :os do
@@ -124,33 +143,6 @@ namespace :doc do
   desc "Generate dependency graph of rake tasks"
   task task_graph: paths.task_graph
 
-end
-
-desc 'List all paths & packages'
-task :list do # TODO: Formatter or Printer classes
-  puts 'Paths'
-  descriptive_paths   = paths.with_descriptions
-  name_justification  = descriptive_paths.name_justification
-  value_justification = descriptive_paths.value_justification
-
-  descriptive_paths.each do |path|
-    puts "  %s = %s # %s" % [
-      path.name.to_s.ljust(name_justification),
-      path.value.to_s.ljust(value_justification),
-      path.description
-    ]
-  end
-
-  puts '', 'Packages'
-  longest_package_name    = packages.map(&:name).map(&:length).max
-  longest_package_version = packages.map(&:version).map(&:length).max
-  packages.each do |package|
-    puts "  %s %s = %s" % [
-      package.name.to_s.ljust(longest_package_name),
-      package.version.ljust(longest_package_version),
-      package.archive.uri
-    ]
-  end
 end
 
 # == Rules =========================================================================================

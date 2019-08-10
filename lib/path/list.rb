@@ -1,10 +1,11 @@
 require 'list'
+require 'path/printer'
 
 module Path
   class List < ::List
 
-    def names
-      map(&:name)
+    def print(**keywords)
+      Printer.call(self, **keywords)
     end
 
     def values
@@ -13,10 +14,6 @@ module Path
 
     def with_descriptions
       self.class.new select(&:description?)
-    end
-
-    def name_justification
-      names.map(&:length).max
     end
 
     def value_justification

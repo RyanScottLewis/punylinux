@@ -1,8 +1,21 @@
 require 'list'
 require 'package/path_resolver'
+require 'package/printer'
 
 module Package
   class List < ::List
+
+    def print(**keywords)
+      Printer.call(self, **keywords)
+    end
+
+    def versions
+      map(&:version)
+    end
+
+    def version_justification
+      versions.map(&:length).max
+    end
 
     def with_paths!(paths)
       each { |package| PathResolver.call(paths, package) }

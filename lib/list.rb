@@ -20,5 +20,13 @@ class List < Array
     find_by_name(method)
   end
 
+  def names
+    map(&:name)
+  end
+
+  def name_justification
+    names.map(&:length).max
+  end
+
 end
 
