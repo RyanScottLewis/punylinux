@@ -1,3 +1,6 @@
+# Generate Linux build configuration
+directory paths.linux_config_source.dirname
+
 file paths.linux_config_source => paths.linux_config_source.dirname do
   sh <<~EOS
     pushd '#{packages.linux.build_path}'
@@ -11,6 +14,7 @@ file paths.linux_config_source => paths.linux_config_source.dirname do
   EOS
 end
 
+# Copy configuration into the Linux package's build path
 file paths.linux_config => [packages.linux.build_path, paths.linux_config_source] do |task|
   cp paths.linux_config_source, paths.linux_config
 end

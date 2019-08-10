@@ -1,7 +1,9 @@
 packages.with_signatures.each do |package|
 
   # Retrieve/generate signature
-  file package.signature_path => [package.archive_path, paths.sources] do
+  directory package.signature_path.dirname
+
+  file package.signature_path => [package.archive_path, package.signature_path.dirname] do
     if package.signature.file?
       sh("cp '#{package.signature.path}' '#{package.signature_path}'")
     elsif package.signature.internal?

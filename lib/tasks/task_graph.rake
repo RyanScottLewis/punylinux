@@ -6,15 +6,11 @@ dependencies << paths.rakefile
 dependencies += paths.task_pattern.glob
 dependencies << paths.doc
 
-file paths.task_graph => dependencies do |task|
-  this_task = task.name
+file paths.task_graph => dependencies do
+  graph = RGL::ImplicitGraph.new
 
-  graph = RGL::ImplicitGraph.new# do |graph|
-
-  graph.vertex_iterator do |b|
-    Rake::Task.tasks.each do |t|
-      b.call(t)
-    end
+  graph.vertex_iterator do |iterator|
+    Rake::Task.tasks.each { |task| iterator.call(task) }
 
     graph.adjacent_iterator { |t, b| t.prerequisites.each(&b) }
     graph.directed = true

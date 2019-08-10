@@ -129,24 +129,6 @@ end
 
 # == Rules =========================================================================================
 
-# =- Directories -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-directory paths.boot
-directory paths.doc
-directory paths.tmp
-
-directory paths.builds
-directory paths.sources
-
-directory paths.linux_config_source.dirname
-directory paths.build_root
-
-packages.each do |package|
-  directory package.lock_path
-end
-
-# =- Files -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
 paths.task_pattern.glob.each do |path|
   load(path)
 end
