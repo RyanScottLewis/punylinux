@@ -68,8 +68,8 @@ CLOBBER.include paths.var
 
 # == Tasks =========================================================================================
 
-desc 'See: os:initrd'
-task default: 'os:initrd'
+desc 'See: os'
+task default: 'os'
 
 # Namespace exists because Rake is stupid (well, Rake is based on Make, which is also stupid in this
 # same way...) There is no distinction between 'tasks' and 'files'/'directory'. So, if I have a file
@@ -89,6 +89,11 @@ task default: 'os:initrd'
 
 namespace :pkg do
 
+  desc 'List all packages'
+  task :list do
+    packages.print
+  end
+
   desc 'Download all package sources'
   task download: packages.archive_paths
 
@@ -104,12 +109,10 @@ namespace :pkg do
   desc 'Install all package builds'
   task install: packages.install_paths
 
-  desc 'List all packages'
-  task :list do
-    packages.print
-  end
-
 end
+
+desc 'See: pkg:install'
+task pkg: 'pkg:install'
 
 namespace :path do
 
@@ -125,6 +128,9 @@ namespace :path do
 
 end
 
+desc 'See: path:list'
+task path: 'path:list'
+
 namespace :os do
 
   desc 'Generate Linux FHS directories'
@@ -138,12 +144,18 @@ namespace :os do
 
 end
 
+desc 'See: os:initrd'
+task os: 'os:initrd'
+
 namespace :doc do
 
   desc "Generate dependency graph of rake tasks"
   task task_graph: paths.task_graph
 
 end
+
+desc 'See: doc:task_graph'
+task doc: 'doc:task_graph'
 
 # == Rules =========================================================================================
 
