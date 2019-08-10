@@ -14,13 +14,12 @@ end
 
 on_install do |package|
   sh <<~EOS
-    pushd '#{package.build_path}'
+    pushd '#{package.build_path}' > /dev/null
     make install &> /dev/null
     rm _install/linuxrc
     chmod 4755 _install/bin/busybox
     ln -sf busybox _install/bin/init
-    popd
-
+    popd > /dev/null
     cp -a '#{package.build_path}/_install/.' '#{paths.build_root}/'
   EOS
 end

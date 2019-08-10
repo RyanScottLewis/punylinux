@@ -3,9 +3,9 @@ directory paths.linux_config_source.dirname
 
 file paths.linux_config_source => paths.linux_config_source.dirname do
   sh <<~EOS
-    pushd '#{packages.linux.build_path}'
+    pushd '#{packages.linux.build_path}' > /dev/null
     make defconfig
-    popd
+    popd > /dev/null
 
     mv '#{packages.linux.build_path.join('.config')}' '#{paths.linux_config_source}'
 
