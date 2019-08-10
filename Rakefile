@@ -33,7 +33,7 @@ path name: :rakefile,   path: 'Rakefile'
 
 path name: :build_root, path: paths.build.join('root') # TODO: Rename to just `root`
 path name: :boot,       path: paths.build_root.join('boot')
-path name: :initrd,     path: paths.boot.join('initrd.img') # TODO: Use .gz
+path name: :initrd,     path: paths.build.join('initrd.gz')
 path name: :kernel,     path: -> { packages.linux.build_path.join(*%w[arch x86 boot bzImage]) } # TODO: Use `uname -m`
 
 path name: :task_paths, path: paths.tasks.join('**', '*.{rake,rb}')
