@@ -33,10 +33,8 @@ path :initrd,     paths.boot.join('initrd.img')                        # Linux r
 # Load all package specifications
   load_results = Package.load_directory(paths.pkg)
 
-  puts "* Packages loaded: %s" % packages.map(&:name).join(', ')
-
   if load_results.has_failures?
-    puts "* Packages failed:"
+    puts "WARN: Packages failed:"
     puts load_results.error_messages.lines.map { |line| '  ' + line }.join
   end
 
@@ -45,10 +43,11 @@ path :initrd,     paths.boot.join('initrd.img')                        # Linux r
 # == Clean =========================================================================================
 
 CLEAN.include paths.linux_config_source
-CLEAN.include paths.var
+CLEAN.include paths.sources
 CLEAN.include paths.tmp
 
 CLOBBER.include paths.build
+CLOBBER.include paths.var
 
 # == Tasks =========================================================================================
 
@@ -81,8 +80,8 @@ task download: packages.archive_paths
 desc 'Decompress all package sources'
 task decompress: packages.build_paths
 
-#desc 'Build all package sources'
-#task build: paths.build_lock_paths
+desc 'Build all package sources'
+task build: packages.build_lock_paths
 
 #desc 'Install all package builds'
 #task package: packages.build_files
