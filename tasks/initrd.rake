@@ -1,8 +1,9 @@
 directory paths.initrd.dirname
 
 dependencies = [
-  paths.initrd.dirname,
-  packages.install_paths
+  packages.install_paths,
+  FS_TARGETS,
+  paths.initrd.dirname
 ].flatten
 
 exclude = paths.initrd.value.gsub(/#{paths.build_root}\/?/, '')

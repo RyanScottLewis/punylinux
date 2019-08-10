@@ -113,6 +113,12 @@ module Path
       self.class.new(path: "#{path}#{ext}")
     end
 
+    def sub(pattern, replacement)
+      pattern = pattern.to_s unless pattern.is_a?(Regexp)
+
+      self.class.new(path: to_s.sub(pattern, replacement))
+    end
+
   end
 end
 
