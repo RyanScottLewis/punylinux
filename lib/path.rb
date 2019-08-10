@@ -8,8 +8,8 @@ module Path
       @all ||= List.new
     end
 
-    def define(*arguments, &block)
-      all << Path::Struct.new(*arguments, &block)
+    def define(**arguments, &block)
+      all << Path::Struct.new(**arguments, &block)
     end
 
   end

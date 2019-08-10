@@ -5,17 +5,24 @@ module Path
   # set the `path` property to the value returned by calling the block on first `#path` invocation.
   class Struct
 
-    def initialize(name: nil, path: nil, &block)
+    def initialize(name: nil, path: nil, description: nil, &block)
       raise ArgumentError, "Cannot pass both a path and a block" if block_given? && !path.nil?
 
       self.name = name                       unless name.nil?
       self.path = !block.nil? ? block : path unless block.nil? && path.nil?
+      @description = description
     end
 
     attr_reader :name
 
     def name=(value)
       @name = value.to_sym
+    end
+
+    attr_reader :description
+
+    def description=(value)
+      @description = value.to_s
     end
 
     def path

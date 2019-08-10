@@ -5,35 +5,31 @@ require 'package/import'
 require 'path/import'
 
 # == Paths =========================================================================================
-# Usage:
-#   path :foo                                       # paths.foo => 'foo'
-#   path :bar, 'foo/bar'                            # paths.bar => 'foo/bar'
-#   path(:baz) { some_global_not_yet_defined.path } # paths.baz => 'value_of_global' # Lazily-defined
 
-path :rakefile, 'Rakefile'                                             # This Rakefile
+path name: :rakefile,            path: 'Rakefile',                                       description: 'The main Rakefile'
 
-path :build                                                            # Linux root, ISO image root, etc.
-path :doc                                                              # Project documentation
-path :lib                                                              # Library sources (Ruby code for this Rakefile)
-path :pkg                                                              # Package definitions
-path :src                                                              # Project sources
-path :tmp                                                              # Temporary file storage
-path :var                                                              # Variable file storage
+path name: :build,                                                                       description: 'Linux root, ISO image root, etc.'
+path name: :doc,                                                                         description: 'Project documentation'
+path name: :lib,                                                                         description: 'Library sources (Ruby code for this Rakefile)'
+path name: :pkg,                                                                         description: 'Package definitions'
+path name: :src,                                                                         description: 'Project sources'
+path name: :tmp,                                                                         description: 'Temporary file storage'
+path name: :var,                                                                         description: 'Variable file storage'
 
-path :fs,                  paths.src.join('fs')                        # Files to import into the Linux root path
-path :linux_config_source, paths.src.join('linux', 'config')           # Linux build configuration source
-path(:linux_config)      { packages.linux.build_path.join('.config') } # Linux build configuration target
+path name: :fs,                  path: paths.src.join('fs'),                             description: 'Files to import into the Linux root path'
+path name: :linux_config_source, path: paths.src.join('linux', 'config'),                description: 'Linux build configuration source'
+path name: :linux_config,        path: -> { packages.linux.build_path.join('.config') }, description: 'Linux build configuration target'
 
-path :builds,              paths.var.join('builds')                    # Package builds
-path :sources,             paths.var.join('sources')                   # Package sources
+path name: :builds,              path: paths.var.join('builds'),                         description: 'Package builds'
+path name: :sources,             path: paths.var.join('sources'),                        description: 'Package sources'
 
-path :build_root, paths.build.join('root')                             # Linux root path - /
-path :boot,       paths.build_root.join('boot')                        # Linux root path - boot/
-path :initrd,     paths.boot.join('initrd.img')                        # Linux root path - boot/initrd.img # TODO: Use initrd.gz
+path name: :build_root,          path: paths.build.join('root'),                         description: 'Linux root path - /'
+path name: :boot,                path: paths.build_root.join('boot'),                    description: 'Linux root path - boot/'
+path name: :initrd,              path: paths.boot.join('initrd.img'),                    description: 'Linux root path - boot/initrd.img' # TODO: Use initrd.gz
 
-path :tasks,        paths.lib.join('tasks')                            # Rake tasks directory
-path :task_pattern, paths.tasks.join('**', '*.{rake,rb}')              # Rake tasks glob pattern
-path :task_graph,   paths.doc.join('task_graph.png')                   # Rake task dependency graph
+path name: :tasks,               path: paths.lib.join('tasks'),                          description: 'Rake tasks directory'
+path name: :task_pattern,        path: paths.tasks.join('**', '*.{rake,rb}'),            description: 'Rake tasks glob pattern'
+path name: :task_graph,          path: paths.doc.join('task_graph.png'),                 description: 'Rake task dependency graph'
 
 # == Packages ======================================================================================
 
@@ -66,8 +62,13 @@ desc 'List all paths & packages'
 task :list do # TODO: Formatter or Printer classes
   puts 'Paths'
   longest_path_name = paths.map(&:name).map(&:length).max
+  longest_path_path = paths.map(&:path).map(&:to_s).map(&:length).max # TODO: path... path? path_path.. C'mon son
   paths.each do |path|
-    puts "  %s = %s" % [path.name.to_s.ljust(longest_path_name), path.path]
+    puts "  %s = %s # %s" % [
+      path.name.to_s.ljust(longest_path_name),
+      path.path.to_s.ljust(longest_path_path), # TODO: PATH PATH!!
+      path.description
+    ]
   end
 
   puts '', 'Packages'
