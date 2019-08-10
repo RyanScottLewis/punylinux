@@ -35,7 +35,7 @@ on_build do |package|
   EOS
 end
 
-on_install do |package|
+on_install do |package| # TODO: Move Filesystem Hierarchy Standard dirs and initrd to outside this pkg
   puts "* Creating Linux Filesystem Hierarchy directories"
   sh <<~EOS
     mkdir -p #{package.install_paths[0...-1].join(' ')}

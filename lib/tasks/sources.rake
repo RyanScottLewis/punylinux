@@ -11,7 +11,7 @@ packages.each do |package|
     end
   end
 
-  # Decompress archive
+  # Decompress archive # TODO: Move to build.rake?
   dependencies = [package.archive_path]
   dependencies << package.checksum_lock_path  if package.checksum?
   dependencies << package.signature_lock_path if package.signature?
