@@ -8,10 +8,9 @@ dependencies = [
 
 file paths.os_initrd => dependencies do
   sh <<~EOS
-    pushd '#{paths.os_root}' > /dev/null
-    find . | fakeroot cpio -o -H newc -R root:root | gzip -9 > initrd
-    popd > /dev/null
-    mv '#{paths.os_root.join('initrd')}' '#{paths.os_initrd}'
+    cd '#{paths.os_root}'
+    find . -path "./*" -not -path './#{paths.os_initrd.sub(paths.os_root.to_s + ?/, '')}' | fakeroot cpio -o -H newc -R root:root | gzip -9 > initrd
+    mv initrd '#{paths.os_initrd.expand_path}'
   EOS
 end
 
