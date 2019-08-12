@@ -6,7 +6,7 @@ require 'path/import'
 
 # == Paths =========================================================================================
 
-FHS      = %w(bin boot dev etc lib proc sbin sys tmp usr/bin usr/sbin)
+FHS      = %w(bin boot dev/pts dev/shm etc lib proc sbin sys tmp usr/bin usr/sbin)
 FHS_GLOB = "{#{FHS.join(?,)}}"
 
 # Descriptive paths
