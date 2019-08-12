@@ -10,25 +10,25 @@ FHS      = %w(bin boot dev/pts dev/shm etc lib proc sbin sys tmp usr/bin usr/sbi
 FHS_GLOB = "{#{FHS.join(?,)}}"
 
 # Descriptive paths
-path name: :build,                                                                       description: 'Linux root, ISO image root, etc.'
-path name: :doc,                                                                         description: 'Project documentation'
-path name: :lib,                                                                         description: 'Library sources'
-path name: :pkg,                                                                         description: 'Package definitions'
-path name: :src,                                                                         description: 'Project sources'
-path name: :tmp,                                                                         description: 'Temporary file storage'
-path name: :var,                                                                         description: 'Variable file storage'
-path name: :fs,                                                                          description: 'Files to import into the Linux root path'
-path name: :tasks,                                                                       description: 'Rake tasks'
+path name: :build,                                                                           description: 'Linux root, ISO image root, etc.'
+path name: :doc,                                                                             description: 'Project documentation'
+path name: :lib,                                                                             description: 'Library sources'
+path name: :pkg,                                                                             description: 'Package definitions'
+path name: :src,                                                                             description: 'Project sources'
+path name: :tmp,                                                                             description: 'Temporary file storage'
+path name: :var,                                                                             description: 'Variable file storage'
+path name: :fs,                                                                              description: 'Files to import into the Linux root path'
+path name: :tasks,                                                                           description: 'Rake tasks'
 
-path name: :linux_config_source,   path: paths.src.join('linux', 'config'),                description: 'Linux build configuration source'
-path name: :linux_config,          path: -> { packages.linux.build_path.join('.config') }, description: 'Linux build configuration target'
+path name: :linux_config_source,   path: paths.src.join('linux', 'config'),                  description: 'Linux build configuration source'
+path name: :linux_config,          path: -> { packages.linux.build_path.join('.config') },   description: 'Linux build configuration target'
 path name: :busybox_config_source, path: paths.src.join('busybox', 'config'),                description: 'Linux build configuration source'
 path name: :busybox_config,        path: -> { packages.busybox.build_path.join('.config') }, description: 'Linux build configuration target'
 
-path name: :builds,              path: paths.var.join('builds'),                         description: 'Package builds'
-path name: :sources,             path: paths.var.join('sources'),                        description: 'Package sources'
+path name: :builds,                path: paths.var.join('builds'),                           description: 'Package builds'
+path name: :sources,               path: paths.var.join('sources'),                          description: 'Package sources'
 
-path name: :task_graph,          path: paths.doc.join('task_graph.png'),                 description: 'Rake task dependency graph'
+path name: :task_graph,            path: paths.doc.join('task_graph.png'),                   description: 'Rake task dependency graph'
 
 # Undescriptive paths
 path name: :rakefile,   path: 'Rakefile'
