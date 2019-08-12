@@ -17,6 +17,12 @@
   * Possibly all package install files
 * Package tasks depend on the package specification
 * Make hybrid ISO - mkhybrid or isohybrid
+* ISOLINUX
+  * Generate `src/isolinux/isolinux.cfg`
+  * Copy all files from `src/isolinux` into iso root
+* Rename
+  * `fs/...`           => `fs/os/...`
+  * `src/isolinux/...` => `fs/iso/...`
 
 ## Documentation
 
