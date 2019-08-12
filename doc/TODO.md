@@ -3,15 +3,11 @@
 ## Features
 
 * Task to check for required development dependencies
-* Generate ISOLINUX image
-* Sync `src/fs` into `build/`
-  * Install script `src/fs/bin/install`
 * Detect checksum type and use the appropriate tool (md5, sha256, sha512, etc.)
   * This could probably just be accomplished with a case statement on the checksum length
 * Files can accept either an array of strings or an file/URL
 * Configuration
   * Inital ramdisk compression enabled/type
-* Create packages for libraries currently under `fs/lib/`
 
 ## Refactor
 
@@ -25,6 +21,7 @@
 * Dir structure
   build/root/ => build/root/linux/
   build/iso/  => build/root/iso/
+* Move config building for linux, busybox into their packages
 
 ## Documentation
 
