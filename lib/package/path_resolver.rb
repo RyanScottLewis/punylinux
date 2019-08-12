@@ -38,7 +38,7 @@ module Package
       struct.signature_lock_path = struct.lock_path.join('signature.lock') if package.signature?
       struct.build_lock_path     = struct.lock_path.join('build.lock')
 
-      struct.install_paths       = package.files.map { |path| @paths.root.join(path) } if package.files?
+      struct.install_paths       = package.files.map { |path| @paths.os_root.join(path) } if package.files?
 
       package.paths = struct
 

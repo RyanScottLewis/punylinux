@@ -1,4 +1,4 @@
-paths.fhs_paths.explode.each do |path|
+paths.os_fhs.explode.each do |path|
   directory path
 end
 

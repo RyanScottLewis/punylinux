@@ -1,6 +1,6 @@
 source_targets = {
-  paths.initrd           => paths.iso_initrd,
-  paths.kernel           => paths.iso_kernel,
+  paths.os_initrd        => paths.iso_initrd,
+  paths.os_kernel        => paths.iso_kernel,
   paths.isolinux_image   => paths.iso_isolinux_image,
   paths.isolinux_ldlinux => paths.iso_isolinux_ldlinux,
   paths.isolinux_config  => paths.iso_isolinux_config,

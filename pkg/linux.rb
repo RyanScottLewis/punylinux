@@ -4,10 +4,9 @@ archive   "https://kernel.org/pub/linux/kernel/v#{version.split(?.).first}.x/lin
 checksum  'c645402843f90a69426975f8923923dfc6edebb5d1bc0092560ffb7135d3cd96'
 signature archive.gsub(/xz$/, 'sign')
 
-# TODO: REMOVE
-#files     %W(
-  #/boot/vmlinuz
-#)
+files     %W(
+  /boot/vmlinuz
+)
 
 on_verify do |package|
   decompressed_path = package.archive_path.sub_ext('')
@@ -38,10 +37,7 @@ on_build do |package|
   EOS
 end
 
-# TODO: REMOVE?
-#on_install do |package|
-  #sh <<~EOS
-    #cp '#{paths.kernel}' '#{package.install_paths.last}'
-  #EOS
-#end
+on_install do |package|
+  cp paths.linux_kernel, paths.os_kernel
+end
 

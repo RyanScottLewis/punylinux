@@ -13,7 +13,7 @@ on_build do |package|
   EOS
 end
 
-on_install do |package|
+on_install do |package| # TODO: 99.9% sure there is an INSTALL_PREFIX or something we can pass to `make install
   sh <<~EOS
     pushd '#{package.build_path}' > /dev/null
 
@@ -28,7 +28,7 @@ on_install do |package|
 
     popd > /dev/null
 
-    cp -a '#{package.build_path}/_install/.' '#{paths.root}/'
+    cp -a '#{package.build_path}/_install/.' '#{paths.os_root}/'
   EOS
 end
 
