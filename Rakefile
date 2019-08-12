@@ -20,14 +20,14 @@ path name: :var,                    description: 'Variable file storage'
 path name: :fs,                     description: 'Files to import into the Linux root path'
 path name: :tasks,                  description: 'Rake tasks'
 
-path name: :isolinux_image,         description: 'ISOLINUX image',                     path: -> { packages.syslinux.build_path.join('bios', 'core', 'isolinux.bin') }
-path name: :isolinux_ldlinux,       description: 'ISOLINUX ldlinux',                   path: -> { packages.syslinux.build_path.join('bios', 'com32', 'elflink', 'ldlinux', 'ldlinux.c32') }
-path name: :isolinux_config,        description: 'ISOLINUX configuration',             path: paths.src.join('isolinux', 'isolinux.cfg')
+path name: :isolinux_image,         description: 'ISOLINUX image',             path: '/usr/lib/syslinux/bios/isolinux.bin'
+path name: :isolinux_ldlinux,       description: 'ISOLINUX ldlinux',           path: '/usr/lib/syslinux/bios/ldlinux.c32'
+path name: :isolinux_config,        description: 'ISOLINUX configuration',     path: paths.src.join('isolinux', 'isolinux.cfg')
 
-path name: :builds,                 description: 'Package builds',                     path: paths.var.join('builds')
-path name: :sources,                description: 'Package sources',                    path: paths.var.join('sources')
+path name: :builds,                 description: 'Package builds',             path: paths.var.join('builds')
+path name: :sources,                description: 'Package sources',            path: paths.var.join('sources')
 
-path name: :task_graph,             description: 'Rake task dependency graph',         path: paths.doc.join('task_graph.png')
+path name: :task_graph,             description: 'Rake task dependency graph', path: paths.doc.join('task_graph.png')
 
 # Undescriptive paths
 path name: :rakefile,             path: 'Rakefile'
