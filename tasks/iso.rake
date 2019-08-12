@@ -1,3 +1,13 @@
+namespace :iso do
+
+  desc 'Generate ISO9660 bootable image'
+  task build: paths.iso
+
+end
+
+desc 'See: iso:build'
+task iso: 'iso:build'
+
 source_targets = {
   paths.os_initrd        => paths.iso_initrd,
   paths.os_kernel        => paths.iso_kernel,

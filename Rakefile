@@ -55,7 +55,7 @@ path name: :iso_isolinux,         path: paths.iso_root.join('isolinux')
 path name: :iso_isolinux_image,   path: -> { paths.iso_isolinux.join(paths.isolinux_image.basename) }
 path name: :iso_isolinux_ldlinux, path: -> { paths.iso_isolinux.join(paths.isolinux_ldlinux.basename) }
 path name: :iso_isolinux_config,  path: paths.iso_isolinux.join(paths.isolinux_config.basename)
-path name: :iso,                  path: paths.build.join("#{NAME}-#{VERSION}.iso") # TODO: NAME and VERSION
+path name: :iso,                  path: paths.build.join("#{NAME}-#{VERSION}.iso")
 
 path name: :task_paths,           path: paths.tasks.join('**', '*.{rake,rb}')
 path name: :fs_paths,             path: paths.fs.join('**', '*')
@@ -64,14 +64,7 @@ path name: :fs_targets,           path: paths.fs_paths.glob.sub(paths.fs, paths.
 # == Packages ======================================================================================
 
 # Load all package specifications
-load_results = Package.load_directory(paths.pkg)
-
-if load_results.has_failures?
-  puts "WARN: Packages failed:"
-  puts load_results.error_messages.lines.map { |line| '  ' + line }.join
-end
-
-packages.with_paths!(paths)
+Package.load_all(paths)
 
 # == Clean =========================================================================================
 
@@ -84,108 +77,10 @@ CLOBBER.include paths.var
 
 # == Tasks =========================================================================================
 
+# Load all tasks under tasks/
+paths.task_paths.glob.each { |path| load(path) }
+
+# Default Rakefile task
 desc 'See: iso'
 task default: 'iso'
-
-# Namespace exists because Rake is stupid (well, Rake is based on Make, which is also stupid in this
-# same way...) There is no distinction between 'tasks' and 'files'/'directory'. So, if I have a file
-# named 'foo', a directory 'foo/' and a task 'foo'; then I call `rake foo`, what in the world
-# happens?
-#
-# In this case, we have a task `build` and a directory `build` (like almost /all/ build automation
-# scripts I write.) One workaround is to define & refer to directories with a `/` suffix, i.e. `foo/`
-# This is fine and dandy for simple projects, however Rake breaks out `directory` in an interesting
-# way. `directory 'foo/bar/'` ends up writing a "file" task for `foo/bar/` and `foo` which calls
-# `mkdir -p`. You will notice that the automatically generated file task for the parent directory
-# has NO `/` suffix. Rake gives no fucks about your conventions, only it's own.
-#
-# Therefore, instead of having conflicting task names for `build` or whatever others may come up in
-# the future, functional tasks are defined here and file/directory tasks are defined normally in the
-# global namespace as normal.
-
-namespace :pkg do
-
-  desc 'List all packages'
-  task :list do
-    packages.print
-  end
-
-  desc 'Download all package sources'
-  task download: packages.archive_paths
-
-  desc 'Check all package checksums'
-  task check: packages.checksum_lock_paths
-
-  desc 'Verify all package signatures'
-  task verify: packages.signature_lock_paths
-
-  desc 'Build all package sources'
-  task build: packages.build_lock_paths
-
-  desc 'Install all package builds'
-  task install: packages.install_paths
-
-end
-
-desc 'See: pkg:install'
-task pkg: 'pkg:install'
-
-namespace :path do
-
-  desc 'List paths'
-  task :list do
-    paths.print
-  end
-
-  desc 'List all paths'
-  task :all do
-    paths.print(all: true)
-  end
-
-end
-
-desc 'See: path:list'
-task path: 'path:list'
-
-namespace :os do
-
-  desc 'Generate Linux FHS directories'
-  task fhs: paths.os_fhs.explode
-
-  desc 'Synchronize filesystem'
-  task fs: paths.fs_targets.split
-
-  desc 'Generate initial ramdisk'
-  task initrd: paths.os_initrd
-
-end
-
-desc 'See: os:initrd'
-task os: 'os:initrd'
-
-namespace :iso do
-
-  desc 'Generate ISO9660 bootable image'
-  task build: paths.iso
-
-end
-
-desc 'See: iso:build'
-task iso: 'iso:build'
-
-namespace :doc do
-
-  desc "Generate dependency graph of rake tasks"
-  task task_graph: paths.task_graph
-
-end
-
-desc 'See: doc:task_graph'
-task doc: 'doc:task_graph'
-
-# == Rules =========================================================================================
-
-paths.task_paths.glob.each do |path|
-  load(path)
-end
 

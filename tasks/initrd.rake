@@ -3,6 +3,7 @@ directory paths.os_initrd.dirname
 dependencies = [
   packages.install_paths,
   paths.fs_targets.split,
+  paths.os_kernel,
   paths.os_initrd.dirname
 ].flatten
 

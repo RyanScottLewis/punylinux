@@ -13,6 +13,19 @@ module Package
       @all ||= List.new
     end
 
+    def load_all(paths)
+      load_results = Package.load_directory(paths.pkg)
+
+      if load_results.has_failures?
+        puts "WARN: Packages failed:"
+        puts load_results.error_messages.lines.map { |line| '  ' + line }.join
+
+        exit 1
+      end
+
+      packages.with_paths!(paths)
+    end
+
     # TODO: Abstract into a loader class
 
     def load_ruby(path)
