@@ -55,6 +55,6 @@ directory paths.iso_xz.dirname
 
 file paths.iso_xz => paths.iso do
   sh <<~EOS
-    xz -9 --keep '#{paths.iso}'
+    xz -9 --keep --force '#{paths.iso}'
   EOS
 end
