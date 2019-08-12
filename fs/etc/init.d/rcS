@@ -1,0 +1,15 @@
+#!/bin/busybox sh
+
+echo "Initializing PunyLinux"
+
+# Create phony TTYs for Busybox (?) or else it will keep complaining about them missing
+touch /dev/null
+ln -sf /dev/null /dev/tty2
+ln -sf /dev/null /dev/tty3
+ln -sf /dev/null /dev/tty4
+
+mount -a                       # Mount all mounts listed in /etc/fstab
+/sbin/mdev -s                  # Populate /dev
+/bin/hostname -F /etc/hostname # Set hostname
+/sbin/ifconfig lo 127.0.0.1 up # Initialize loopback
+
