@@ -20,12 +20,6 @@ path name: :var,                    description: 'Variable file storage'
 path name: :fs,                     description: 'Files to import into the Linux root path'
 path name: :tasks,                  description: 'Rake tasks'
 
-path name: :linux_config_source,    description: 'Linux build configuration source',   path: paths.src.join('linux', 'config')
-path name: :linux_config,           description: 'Linux build configuration target',   path: -> { packages.linux.build_path.join('.config') }
-
-path name: :busybox_config_source,  description: 'Busybox build configuration source', path: paths.src.join('busybox', 'config')
-path name: :busybox_config,         description: 'Busybox build configuration target', path: -> { packages.busybox.build_path.join('.config') }
-
 path name: :isolinux_image,         description: 'ISOLINUX image',                     path: -> { packages.syslinux.build_path.join('bios', 'core', 'isolinux.bin') }
 path name: :isolinux_ldlinux,       description: 'ISOLINUX ldlinux',                   path: -> { packages.syslinux.build_path.join('bios', 'com32', 'elflink', 'ldlinux', 'ldlinux.c32') }
 path name: :isolinux_config,        description: 'ISOLINUX configuration',             path: paths.src.join('isolinux', 'isolinux.cfg')
@@ -72,7 +66,6 @@ packages.with_paths!(paths)
 
 # == Clean =========================================================================================
 
-CLEAN.include paths.linux_config_source
 CLEAN.include paths.sources
 CLEAN.include paths.tmp
 CLEAN.include paths.task_graph

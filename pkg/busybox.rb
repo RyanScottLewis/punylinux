@@ -16,10 +16,18 @@ end
 on_install do |package|
   sh <<~EOS
     pushd '#{package.build_path}' > /dev/null
+
+    make defconfig
+
+    # Enable static linking
+    sed -E -i 's/^(# )?(CONFIG_STATIC).+$/\\2=y/g' .config
+
     make install &> /dev/null
     rm _install/linuxrc
     chmod 4755 _install/bin/busybox
+
     popd > /dev/null
+
     cp -a '#{package.build_path}/_install/.' '#{paths.root}/'
   EOS
 end

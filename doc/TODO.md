@@ -21,7 +21,6 @@
 * Dir structure
   build/root/ => build/root/linux/
   build/iso/  => build/root/iso/
-* Move config building for linux, busybox into their packages
 
 ## Documentation
 

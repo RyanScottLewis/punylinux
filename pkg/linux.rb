@@ -22,6 +22,18 @@ on_build do |package|
 
   sh <<~EOS
     cd '#{package.build_path}'
+
+    make defconfig
+
+    # Enable initial ram disk and /dev/ram0 support
+    sed -E -i 's/^(# )?(CONFIG_BLK_DEV_(RAM|INITRD)).+$/\\2=y/g' .config
+
+    # Set number of RAM disk devices
+    echo -e 'CONFIG_BLK_DEV_RAM_COUNT=1' >> .config
+
+    # RAM disk size (in kilobytes)
+    echo -e 'CONFIG_BLK_DEV_RAM_SIZE=8192' >> .config
+
     make -j#{jobs}
   EOS
 end
