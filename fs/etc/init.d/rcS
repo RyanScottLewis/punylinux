@@ -1,7 +1,5 @@
 #!/bin/busybox sh
 
-echo "Initializing PunyLinux"
-
 mount -a                       # Mount all mounts listed in /etc/fstab
 /sbin/mdev -s                  # Populate /dev
 /bin/hostname -F /etc/hostname # Set hostname

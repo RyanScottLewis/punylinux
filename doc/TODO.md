@@ -8,6 +8,7 @@
 * Files can accept either an array of strings or an file/URL
 * Configuration
   * Inital ramdisk compression enabled/type
+* Squashfs or cramfs
 
 ## Refactor
 
@@ -15,6 +16,7 @@
 * Task dependency graph should severly limit which tasks are output
   * Possibly all package install files
 * Package tasks depend on the package specification
+* Make hybrid ISO - mkhybrid or isohybrid
 
 ## Documentation
 

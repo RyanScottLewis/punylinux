@@ -46,7 +46,7 @@ file paths.iso => dependencies do
       -no-emul-boot \
       -o #{paths.iso} \
       -rational-rock \
-      -volid "PunyLinux ISO" \
+      -volid "#{ISO_LABEL}" \
       '#{paths.iso_root}'
   EOS
 end
