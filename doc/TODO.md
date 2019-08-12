@@ -9,7 +9,6 @@
 * Detect checksum type and use the appropriate tool (md5, sha256, sha512, etc.)
   * This could probably just be accomplished with a case statement on the checksum length
 * Files can accept either an array of strings or an file/URL
-* Use fakeroot?
 * Configuration
   * Inital ramdisk compression enabled/type
 * Create packages for libraries currently under `fs/lib/`
@@ -22,6 +21,7 @@
 * Task dependency graph should severly limit which tasks are output
   * Possibly all package install files
 * Rename `build/root/` to `build/os/`
+* Package tasks depend on the package specification
 
 ## Documentation
 

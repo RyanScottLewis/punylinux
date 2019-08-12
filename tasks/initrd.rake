@@ -8,11 +8,9 @@ dependencies = [
 
 file paths.initrd => dependencies do
   sh <<~EOS
-    ln -sf '#{paths.build_root.join('bin', 'busybox')}' '#{paths.build_root.join('init')}'
     pushd '#{paths.build_root}' > /dev/null
-    find . -print | cpio -o -H newc | gzip -9 > initrd
+    find . | fakeroot cpio -o -H newc -R root:root | gzip -9 > initrd
     popd > /dev/null
-    rm -f '#{paths.build_root.join('init')}'
     mv '#{paths.build_root.join('initrd')}' '#{paths.initrd}'
   EOS
 end
