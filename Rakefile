@@ -10,38 +10,53 @@ FHS      = %w(bin boot dev/pts dev/shm etc lib proc sbin sys tmp usr/bin usr/sbi
 FHS_GLOB = "{#{FHS.join(?,)}}"
 
 # Descriptive paths
-path name: :build,                                                                           description: 'Linux root, ISO image root, etc.'
-path name: :doc,                                                                             description: 'Project documentation'
-path name: :lib,                                                                             description: 'Library sources'
-path name: :pkg,                                                                             description: 'Package definitions'
-path name: :src,                                                                             description: 'Project sources'
-path name: :tmp,                                                                             description: 'Temporary file storage'
-path name: :var,                                                                             description: 'Variable file storage'
-path name: :fs,                                                                              description: 'Files to import into the Linux root path'
-path name: :tasks,                                                                           description: 'Rake tasks'
+path name: :build,                  description: 'Linux root, ISO image root, etc.'
+path name: :doc,                    description: 'Project documentation'
+path name: :lib,                    description: 'Library sources'
+path name: :pkg,                    description: 'Package definitions'
+path name: :src,                    description: 'Project sources'
+path name: :tmp,                    description: 'Temporary file storage'
+path name: :var,                    description: 'Variable file storage'
+path name: :fs,                     description: 'Files to import into the Linux root path'
+path name: :tasks,                  description: 'Rake tasks'
 
-path name: :linux_config_source,   path: paths.src.join('linux', 'config'),                  description: 'Linux build configuration source'
-path name: :linux_config,          path: -> { packages.linux.build_path.join('.config') },   description: 'Linux build configuration target'
-path name: :busybox_config_source, path: paths.src.join('busybox', 'config'),                description: 'Linux build configuration source'
-path name: :busybox_config,        path: -> { packages.busybox.build_path.join('.config') }, description: 'Linux build configuration target'
+path name: :linux_config_source,    description: 'Linux build configuration source',   path: paths.src.join('linux', 'config')
+path name: :linux_config,           description: 'Linux build configuration target',   path: -> { packages.linux.build_path.join('.config') }
 
-path name: :builds,                path: paths.var.join('builds'),                           description: 'Package builds'
-path name: :sources,               path: paths.var.join('sources'),                          description: 'Package sources'
+path name: :busybox_config_source,  description: 'Busybox build configuration source', path: paths.src.join('busybox', 'config')
+path name: :busybox_config,         description: 'Busybox build configuration target', path: -> { packages.busybox.build_path.join('.config') }
 
-path name: :task_graph,            path: paths.doc.join('task_graph.png'),                   description: 'Rake task dependency graph'
+path name: :isolinux_image,         description: 'ISOLINUX image',                     path: -> { packages.syslinux.build_path.join('bios', 'core', 'isolinux.bin') }
+path name: :isolinux_ldlinux,       description: 'ISOLINUX ldlinux',                   path: -> { packages.syslinux.build_path.join('bios', 'com32', 'elflink', 'ldlinux', 'ldlinux.c32') }
+path name: :isolinux_config,        description: 'ISOLINUX configuration',             path: paths.src.join('isolinux', 'isolinux.cfg')
+
+path name: :builds,                 description: 'Package builds',                     path: paths.var.join('builds')
+path name: :sources,                description: 'Package sources',                    path: paths.var.join('sources')
+
+path name: :task_graph,             description: 'Rake task dependency graph',         path: paths.doc.join('task_graph.png')
 
 # Undescriptive paths
-path name: :rakefile,   path: 'Rakefile'
+path name: :rakefile,             path: 'Rakefile'
 
-path name: :root,       path: paths.build.join('root')
-path name: :boot,       path: paths.root.join('boot') # TODO: UNUSED?
-path name: :initrd,     path: paths.build.join('initrd.cpio.gz')
-path name: :kernel,     path: -> { packages.linux.build_path.join(*%w[arch x86 boot bzImage]) } # TODO: Use `uname -m`
+path name: :root,                 path: paths.build.join('root')
+path name: :boot,                 path: paths.root.join('boot') # TODO: UNUSED?
+path name: :initrd,               path: paths.build.join('initrd.cpio.gz')
+path name: :kernel,               path: -> { packages.linux.build_path.join(*%w[arch x86 boot bzImage]) } # TODO: Use `uname -m`
 
-path name: :task_paths, path: paths.tasks.join('**', '*.{rake,rb}')
-path name: :fhs_paths,  path: paths.root.join(FHS_GLOB)
-path name: :fs_paths,   path: paths.fs.join('**', '*')
-path name: :fs_targets, path: paths.fs_paths.glob.sub(paths.fs, paths.root).join
+path name: :iso_root,             path: paths.build.join('iso')
+path name: :iso_boot,             path: paths.iso_root.join('boot')
+path name: :iso_initrd,           path: paths.iso_boot.join(paths.initrd.basename)
+path name: :iso_kernel,           path: paths.iso_boot.join('punylinux')
+path name: :iso_isolinux,         path: paths.iso_root.join('isolinux')
+path name: :iso_isolinux_image,   path: -> { paths.iso_isolinux.join(paths.isolinux_image.basename) }
+path name: :iso_isolinux_ldlinux, path: -> { paths.iso_isolinux.join(paths.isolinux_ldlinux.basename) }
+path name: :iso_isolinux_config,  path: paths.iso_isolinux.join(paths.isolinux_config.basename)
+path name: :iso,                  path: paths.build.join('punylinux-0.0.1.iso') # TODO: NAME and VERSION
+
+path name: :task_paths,           path: paths.tasks.join('**', '*.{rake,rb}')
+path name: :fhs_paths,            path: paths.root.join(FHS_GLOB)
+path name: :fs_paths,             path: paths.fs.join('**', '*')
+path name: :fs_targets,           path: paths.fs_paths.glob.sub(paths.fs, paths.root).join
 
 # == Packages ======================================================================================
 
@@ -67,8 +82,8 @@ CLOBBER.include paths.var
 
 # == Tasks =========================================================================================
 
-desc 'See: os'
-task default: 'os'
+desc 'See: iso'
+task default: 'iso'
 
 # Namespace exists because Rake is stupid (well, Rake is based on Make, which is also stupid in this
 # same way...) There is no distinction between 'tasks' and 'files'/'directory'. So, if I have a file
@@ -145,6 +160,16 @@ end
 
 desc 'See: os:initrd'
 task os: 'os:initrd'
+
+namespace :iso do
+
+  desc 'Generate ISO9660 bootable image'
+  task build: paths.iso
+
+end
+
+desc 'See: iso:build'
+task iso: 'iso:build'
 
 namespace :doc do
 

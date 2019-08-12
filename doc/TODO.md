@@ -22,6 +22,9 @@
   * Possibly all package install files
 * Rename `build/root/` to `build/os/`
 * Package tasks depend on the package specification
+* Dir structure
+  build/root/ => build/root/linux/
+  build/iso/  => build/root/iso/
 
 ## Documentation
 
