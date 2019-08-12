@@ -3,15 +3,15 @@
 
 set -x
 
-rm -f build/initrd.gz
+rm -rf build
+
 rake
 
-rm -rf build/punylinux-0.0.1.iso build/iso
+cp -a build/initrd.cpio.gz build/iso/
 
-#cp -a build/root/. build/iso/
 mkdir -p build/iso/images
-cp -a build/root/boot/vmlinuz build/iso/images/punylinux
-cp -a build/initrd.gz build/iso/
+cp var/builds/linux-5.2.5/arch/`uname -m`/boot/bzImage build/iso/images/punylinux
+cp -a build/initrd.cpio.gz build/iso/
 
 mkdir -p build/iso/isolinux
 cp var/builds/syslinux-6.03/bios/core/isolinux.bin build/iso/isolinux/

@@ -5,10 +5,11 @@ signature "#{archive}.sig"
 checksum  "#{archive}.sha256"
 
 on_build do |package|
+  jobs = `nproc`.to_i
+
   sh <<~EOS
     cd '#{package.build_path}'
-    make defconfig
-    make
+    make -j#{jobs}
   EOS
 end
 
@@ -18,7 +19,6 @@ on_install do |package|
     make install &> /dev/null
     rm _install/linuxrc
     chmod 4755 _install/bin/busybox
-    ln -sf busybox _install/bin/init
     popd > /dev/null
     cp -a '#{package.build_path}/_install/.' '#{paths.build_root}/'
   EOS
@@ -59,7 +59,6 @@ files %w(
   /bin/gzip
   /bin/hostname
   /bin/hush
-  /bin/init
   /bin/ionice
   /bin/iostat
   /bin/ipcalc

@@ -20,8 +20,10 @@ path name: :var,                                                                
 path name: :fs,                                                                          description: 'Files to import into the Linux root path'
 path name: :tasks,                                                                       description: 'Rake tasks'
 
-path name: :linux_config_source, path: paths.src.join('linux', 'config'),                description: 'Linux build configuration source'
-path name: :linux_config,        path: -> { packages.linux.build_path.join('.config') }, description: 'Linux build configuration target'
+path name: :linux_config_source,   path: paths.src.join('linux', 'config'),                description: 'Linux build configuration source'
+path name: :linux_config,          path: -> { packages.linux.build_path.join('.config') }, description: 'Linux build configuration target'
+path name: :busybox_config_source, path: paths.src.join('busybox', 'config'),                description: 'Linux build configuration source'
+path name: :busybox_config,        path: -> { packages.busybox.build_path.join('.config') }, description: 'Linux build configuration target'
 
 path name: :builds,              path: paths.var.join('builds'),                         description: 'Package builds'
 path name: :sources,             path: paths.var.join('sources'),                        description: 'Package sources'
@@ -33,7 +35,7 @@ path name: :rakefile,   path: 'Rakefile'
 
 path name: :build_root, path: paths.build.join('root') # TODO: Rename to just `root`
 path name: :boot,       path: paths.build_root.join('boot')
-path name: :initrd,     path: paths.build.join('initrd.gz')
+path name: :initrd,     path: paths.build.join('initrd.cpio.gz')
 path name: :kernel,     path: -> { packages.linux.build_path.join(*%w[arch x86 boot bzImage]) } # TODO: Use `uname -m`
 
 path name: :task_paths, path: paths.tasks.join('**', '*.{rake,rb}')
