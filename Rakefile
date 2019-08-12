@@ -4,6 +4,11 @@ require 'rake/clean'
 require 'package/import'
 require 'path/import'
 
+# == Config ========================================================================================
+
+NAME    = 'punylinux'
+VERSION = '0.0.1'
+
 # == Paths =========================================================================================
 
 FHS      = %w(bin boot dev/pts dev/shm etc lib proc sbin sys tmp usr/bin usr/sbin)
@@ -44,13 +49,13 @@ path name: :os_kernel,            path: paths.os_boot.join('vmlinuz')
 
 path name: :iso_root,             path: paths.root.join('iso')
 path name: :iso_boot,             path: paths.iso_root.join('boot')
-path name: :iso_initrd,           path: paths.iso_boot.join('punylinux.' + paths.os_initrd.to_s.gsub(/^.+?\./, ''))
-path name: :iso_kernel,           path: paths.iso_boot.join('punylinux')
+path name: :iso_initrd,           path: paths.iso_boot.join(NAME + '.' + paths.os_initrd.to_s.gsub(/^.+?\./, ''))
+path name: :iso_kernel,           path: paths.iso_boot.join(NAME)
 path name: :iso_isolinux,         path: paths.iso_root.join('isolinux')
 path name: :iso_isolinux_image,   path: -> { paths.iso_isolinux.join(paths.isolinux_image.basename) }
 path name: :iso_isolinux_ldlinux, path: -> { paths.iso_isolinux.join(paths.isolinux_ldlinux.basename) }
 path name: :iso_isolinux_config,  path: paths.iso_isolinux.join(paths.isolinux_config.basename)
-path name: :iso,                  path: paths.build.join('punylinux-0.0.1.iso') # TODO: NAME and VERSION
+path name: :iso,                  path: paths.build.join("#{NAME}-#{VERSION}.iso") # TODO: NAME and VERSION
 
 path name: :task_paths,           path: paths.tasks.join('**', '*.{rake,rb}')
 path name: :fs_paths,             path: paths.fs.join('**', '*')
