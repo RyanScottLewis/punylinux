@@ -9,6 +9,12 @@ on_build do |package|
 
   sh <<~EOS
     cd '#{package.build_path}'
+
+    make defconfig &> /dev/null
+
+    # Enable static linking
+    sed -E -i 's/^(# )?(CONFIG_STATIC).+$/\\2=y/g' .config
+
     make -j#{jobs}
   EOS
 end
@@ -16,11 +22,6 @@ end
 on_install do |package| # TODO: 99.9% sure there is an INSTALL_PREFIX or something we can pass to `make install
   sh <<~EOS
     pushd '#{package.build_path}' > /dev/null
-
-    make defconfig
-
-    # Enable static linking
-    sed -E -i 's/^(# )?(CONFIG_STATIC).+$/\\2=y/g' .config
 
     make install &> /dev/null
     rm _install/linuxrc
