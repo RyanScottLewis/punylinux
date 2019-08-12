@@ -33,15 +33,15 @@ path name: :task_graph,            path: paths.doc.join('task_graph.png'),      
 # Undescriptive paths
 path name: :rakefile,   path: 'Rakefile'
 
-path name: :build_root, path: paths.build.join('root') # TODO: Rename to just `root`
-path name: :boot,       path: paths.build_root.join('boot')
+path name: :root,       path: paths.build.join('root')
+path name: :boot,       path: paths.root.join('boot') # TODO: UNUSED?
 path name: :initrd,     path: paths.build.join('initrd.cpio.gz')
 path name: :kernel,     path: -> { packages.linux.build_path.join(*%w[arch x86 boot bzImage]) } # TODO: Use `uname -m`
 
 path name: :task_paths, path: paths.tasks.join('**', '*.{rake,rb}')
-path name: :fhs_paths,  path: paths.build_root.join(FHS_GLOB)
+path name: :fhs_paths,  path: paths.root.join(FHS_GLOB)
 path name: :fs_paths,   path: paths.fs.join('**', '*')
-path name: :fs_targets, path: paths.fs_paths.glob.sub(paths.fs, paths.build_root).join
+path name: :fs_targets, path: paths.fs_paths.glob.sub(paths.fs, paths.root).join
 
 # == Packages ======================================================================================
 

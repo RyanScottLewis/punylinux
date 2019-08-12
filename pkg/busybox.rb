@@ -20,7 +20,7 @@ on_install do |package|
     rm _install/linuxrc
     chmod 4755 _install/bin/busybox
     popd > /dev/null
-    cp -a '#{package.build_path}/_install/.' '#{paths.build_root}/'
+    cp -a '#{package.build_path}/_install/.' '#{paths.root}/'
   EOS
 end
 
