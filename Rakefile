@@ -56,6 +56,7 @@ path name: :iso_isolinux_image,   path: -> { paths.iso_isolinux.join(paths.isoli
 path name: :iso_isolinux_ldlinux, path: -> { paths.iso_isolinux.join(paths.isolinux_ldlinux.basename) }
 path name: :iso_isolinux_config,  path: paths.iso_isolinux.join(paths.isolinux_config.basename)
 path name: :iso,                  path: paths.build.join("#{NAME}-#{VERSION}.iso")
+path name: :iso_xz,               path: paths.iso.append_ext('.xz')
 
 path name: :task_paths,           path: paths.tasks.join('**', '*.{rake,rb}')
 path name: :fs_paths,             path: paths.fs.join('**', '*')

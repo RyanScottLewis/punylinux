@@ -3,10 +3,13 @@ namespace :iso do
   desc 'Generate ISO9660 bootable image'
   task build: paths.iso
 
+  desc 'Compress ISO'
+  task compress: paths.iso_xz
+
 end
 
-desc 'See: iso:build'
-task iso: 'iso:build'
+desc 'See: iso:compress'
+task iso: 'iso:compress'
 
 source_targets = {
   paths.os_initrd        => paths.iso_initrd,
@@ -26,7 +29,10 @@ source_targets.each do |source, target|
 
 end
 
-file paths.iso => source_targets.values do
+directory paths.iso.dirname
+
+dependencies = [source_targets.values, paths.iso.dirname].flatten
+file paths.iso => dependencies do
   sh <<~EOS
     genisoimage \
       -b isolinux/isolinux.bin \
@@ -45,3 +51,10 @@ file paths.iso => source_targets.values do
   EOS
 end
 
+directory paths.iso_xz.dirname
+
+file paths.iso_xz => paths.iso do
+  sh <<~EOS
+    xz -9 --keep '#{paths.iso}'
+  EOS
+end
