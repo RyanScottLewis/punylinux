@@ -1,5 +1,7 @@
 # TODO
 
+* Specs
+
 ## Features
 
 * Task to check for required development dependencies
