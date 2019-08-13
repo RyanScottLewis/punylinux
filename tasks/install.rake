@@ -5,7 +5,6 @@ packages.with_files.each do |package|
 
     dependencies = []
     dependencies << package.build_lock_path
-    dependencies += paths.os_fhs.explode
     dependencies << path.dirname
 
     file path => dependencies do
