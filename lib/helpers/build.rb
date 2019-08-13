@@ -1,8 +1,10 @@
 module Helpers
   module Build
 
-    def make(task=nil)
-      command = ['make']
+    def make(task=nil, env={})
+      env = env.map { |k, v| [k, v].join(?=) }.join(' ')
+
+      command = ['make'] + env
       command << (task || "-j`nproc`")
       command = command.join(' ')
 
