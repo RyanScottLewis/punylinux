@@ -6,9 +6,7 @@ require 'bundler/setup'
 
 require 'rake/clean' # TODO: REMOVE
 
-# Require all internal library files
-require 'package/import'
-require 'path/import'
+require 'helpers'
 
 # == Config ========================================================================================
 

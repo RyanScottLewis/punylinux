@@ -5,35 +5,25 @@ signature "#{archive}.sig"
 checksum  "#{archive}.sha256"
 
 on_build do |package|
-  jobs = `nproc`.to_i
+  config_path = package.build_path.join('.config')
 
-  sh <<~EOS
-    cd '#{package.build_path}'
+  unless config_path.exist?
+    cd(package.build_path) { make :defconfig }
 
-    make defconfig &> /dev/null
+    update_config(package.build_path.join('.config'),
+      'CONFIG_PREFIX'  => %Q["#{paths.os_root.expand_path}"], # Install location
+      'CONFIG_STATIC'  => ?y,                                 # Statically link libraries
+      'CONFIG_LINUXRC' => ?n,                                 # Do not build linuxrc file
+    )
+  end
 
-    # Enable static linking
-    sed -E -i 's/^(# )?(CONFIG_STATIC).+$/\\2=y/g' .config
-
-    make -j#{jobs}
-  EOS
+  cd(package.build_path) { make }
 end
 
-on_install do |package| # TODO: 99.9% sure there is an INSTALL_PREFIX or something we can pass to `make install
-  sh <<~EOS
-    pushd '#{package.build_path}' > /dev/null
-
-    make install &> /dev/null
-    rm _install/linuxrc
-    chmod 4755 _install/bin/busybox
-
-    popd > /dev/null
-
-    cp -a '#{package.build_path}/_install/.' '#{paths.os_root}/'
-  EOS
+on_install do |package|
+  cd(package.build_path) { make :install }
 end
 
-# Busybox's file list is fairly large so we put it at the bottom of the specification
 files %w(
   /bin/arch
   /bin/ash
