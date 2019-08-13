@@ -53,23 +53,31 @@ module Path
     end
 
     def open(mode=?r)
-      File.open(path, mode) { |file| yield(file) }
+      File.open(value, mode) { |file| yield(file) }
     end
 
     def read
       open { |file| file.read }
     end
 
+    def write(contents, mode=?w)
+      open(mode) { |file| file.write(contents) }
+    end
+
+    def overwrite(contents)
+      write(contents, 'w+')
+    end
+
     def exist?
-      File.exist?(path)
+      File.exist?(value)
     end
 
     def extname
-      File.extname(path)
+      File.extname(value)
     end
 
     def glob(pattern=nil)
-      pattern = pattern.nil? ? path : join(pattern)
+      pattern = pattern.nil? ? value : join(pattern)
       paths   = Dir[pattern].map { |path| self.class.new(path: path) }
 
       List.new(paths)
@@ -78,7 +86,7 @@ module Path
     # Take a glob pattern with alternations and explode into individual paths
     # Only handles a single set of alternations, i.e. `/foo/bar/{baz,qux}`
     def explode(pattern=nil)
-      pattern = pattern.nil? ? path : join(pattern)
+      pattern = pattern.nil? ? value : join(pattern)
       match   = pattern.match(/{.+}/) # TODO: Scan and iterate to match multiple alternation sets
 
       return [self] unless match
@@ -94,39 +102,47 @@ module Path
     end
 
     def join(*arguments)
-      self.class.new(path: File.join(path, *arguments))
+      self.class.new(path: File.join(value, *arguments))
     end
 
     def split(separator=File::PATH_SEPARATOR)
-      paths = path.split(separator).map { |partial| self.class.new(path: partial) }
+      paths = value.split(separator).map { |partial| self.class.new(path: partial) }
 
       List.new(paths)
     end
 
     def expand_path(*arguments)
-      self.class.new(path: File.expand_path(path, *arguments))
+      self.class.new(path: File.expand_path(value, *arguments))
     end
 
     def basename
-      self.class.new(path: File.basename(path))
+      self.class.new(path: File.basename(value))
     end
 
     def dirname
-      self.class.new(path: File.dirname(path))
+      self.class.new(path: File.dirname(value))
     end
 
     def sub_ext(ext)
-      self.class.new(path: path.to_s.gsub(/#{extname}$/, ext))
+      self.class.new(path: value.gsub(/#{extname}$/, ext))
     end
 
     def append_ext(ext)
-      self.class.new(path: "#{path}#{ext}")
+      self.class.new(path: "#{value}#{ext}")
+    end
+
+    def remove_ext
+      sub_ext('')
+    end
+
+    def symlink?
+      File.symlink?(value)
     end
 
     def sub(pattern, replacement)
       pattern = pattern.to_s unless pattern.is_a?(Regexp)
 
-      self.class.new(path: to_s.sub(pattern, replacement))
+      self.class.new(path: value.sub(pattern, replacement))
     end
 
   end
