@@ -166,7 +166,7 @@ currently our initialization script.
 
 #### Bootloader
 
-ISOLINUX can be configured by editing `src/isolinux/isolinux.cfg`. This includes the kernel command
+ISOLINUX can be configured by editing `src/isolinux.cfg`. This includes the kernel command
 line options.
 
 Note that you probably don't want to mess with `initrd`, `rdinit`, or `root` as this is what causes

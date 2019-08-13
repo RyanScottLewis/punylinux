@@ -28,7 +28,7 @@ path name: :tasks,            description: 'Rake tasks'
 
 path name: :isolinux_image,   description: 'ISOLINUX image',             path: '/usr/lib/syslinux/bios/isolinux.bin'
 path name: :isolinux_ldlinux, description: 'ISOLINUX ldlinux',           path: '/usr/lib/syslinux/bios/ldlinux.c32'
-path name: :isolinux_config,  description: 'ISOLINUX configuration',     path: paths.src.join('isolinux', 'isolinux.cfg')
+path name: :isolinux_config,  description: 'ISOLINUX configuration',     path: paths.src.join('isolinux.cfg')
 
 path name: :builds,           description: 'Package builds',             path: paths.var.join('builds')
 path name: :sources,          description: 'Package sources',            path: paths.var.join('sources')
