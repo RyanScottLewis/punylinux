@@ -11,6 +11,7 @@
 * Configuration
   * Inital ramdisk compression enabled/type
 * Squashfs or cramfs
+* `var/log/` and log each build as well as each package build within `var/log/PKG/std{out,err}.log`
 
 ## Refactor
 
@@ -25,6 +26,34 @@
 * Rename
   * `fs/...`           => `fs/os/...`
   * `src/isolinux/...` => `fs/iso/...`
+* Move frontend functionality to concerns (see shoestring's Rakefile)
+* Move backend functionality to middleware
+  * Works like Rack middleware: 
+
+  ```rb
+  class StripBinaries
+
+    def self.call(package)
+      new.call(package)
+    end
+
+    def initialize(options={})
+      @options = {
+        command: 'strip --strip-all',
+        pattern: %r{/s?bin/}
+      }.merge(options)
+    end
+
+    def call(package)
+      package.install_paths.select { |path| path.to_s =~ @options[:pattern] }.each do |path|
+        sh "#{@options[:command]} '#{path}'"
+      end
+    end
+
+  end
+
+  package.on_install << StripBinaries
+  ```
 
 ## Documentation
 
