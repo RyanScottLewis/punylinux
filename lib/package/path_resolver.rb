@@ -33,7 +33,7 @@ module Package
       struct.checksum_path       = @paths.sources.join(package.identifier).append_ext('.checksum')  if package.checksum?
       struct.signature_path      = @paths.sources.join(package.identifier).append_ext('.signature') if package.signature?
       struct.build_path          = @paths.builds.join(package.identifier)
-      struct.lock_path           = @paths.tmp.join(package.identifier)
+      struct.lock_path           = @paths.locks.join(package.identifier)
       struct.checksum_lock_path  = struct.lock_path.join('checksum.lock')  if package.checksum?
       struct.signature_lock_path = struct.lock_path.join('signature.lock') if package.signature?
       struct.build_lock_path     = struct.lock_path.join('build.lock')
