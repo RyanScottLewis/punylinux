@@ -23,9 +23,7 @@
 * ISOLINUX
   * Generate `src/isolinux/isolinux.cfg`
   * Copy all files from `src/isolinux` into iso root
-* Rename
-  * `fs/...`           => `fs/os/...`
-  * `src/isolinux/...` => `fs/iso/...`
+* Handle strings for callbacks as commands to execute (for YAML/JSON package specifications)
 * Move frontend functionality to concerns (see shoestring's Rakefile)
 * Move backend functionality to middleware
   * Works like Rack middleware: 
