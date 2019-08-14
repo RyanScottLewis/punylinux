@@ -48,6 +48,8 @@ file paths.iso => dependencies do
       -rational-rock \
       -volid "#{ISO_LABEL}" \
       '#{paths.iso_root}'
+
+    isohybrid '#{paths.iso}'
   EOS
 end
 
