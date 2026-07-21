@@ -101,7 +101,7 @@ end
 on_install do |package|                                   # Callback to install this package
   sh <<~EOS
     cd '#{package.build_path}'
-    make DESTDIR'#{paths.os_root}' install
+    make DESTDIR='#{paths.os_root}' install
   EOS
 end
 ```
